@@ -106,7 +106,7 @@ fun MeditationGraph() {
             }
     ) {
         Image(
-            painter = painterResource(R.drawable.graph_background),
+            painter = painterResource(R.drawable.meditation_graph),
             contentDescription = "",
             modifier = Modifier.requiredSize(graphSize))
 
@@ -134,7 +134,7 @@ fun MeditationGraph() {
 fun MeditationNode(
     modifier: Modifier = Modifier,
     name: String,
-    size: Dp = 30.dp
+    size: Dp = 35.dp
 ) {
     IconButton(
         onClick = { /*TODO*/ },
@@ -143,7 +143,7 @@ fun MeditationNode(
             .size(size)
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.meditation_ball),
+            painter = painterResource(id = R.drawable.meditation_ball_svg),
             tint = Color.Unspecified,
             contentDescription = null
         )

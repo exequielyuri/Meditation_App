@@ -33,4 +33,8 @@ val PurpleDark1 = Color(0xFF462359)
 val Gold = Color(0xFFFFCD33)
 val PurpleGraph = Color(0xFF410C55)
 
+val DarkYellowGradient = Color(0xFFFF9A00)
+val LightYellowGradient = Color(0xFFFFD590)
+
+val Pink = Color(0xFFF5E6FC)
 
