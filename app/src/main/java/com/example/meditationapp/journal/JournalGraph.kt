@@ -1,6 +1,7 @@
 package com.example.meditationapp.journal
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -13,7 +14,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.meditationapp.ui.theme.Gold
 import com.example.meditationapp.ui.theme.PurpleLightLight
 import kotlin.math.roundToInt
 import com.example.meditationapp.R
@@ -22,13 +22,20 @@ import com.example.meditationapp.ui.theme.LightYellowGradient
 
 @Composable
 fun JournalGraph(
+    modifier: Modifier = Modifier,
     entries: List<JournalEntry>,
     graphBarGradient: Brush = Brush.verticalGradient(colors = listOf(LightYellowGradient, DarkYellowGradient)),
     fontColor: Color = PurpleLightLight,
     height: Dp = 210.dp
 ) {
 
-    Box(modifier = Modifier.height(height).padding(10.dp)) {
+    Box(
+        modifier = modifier
+            .height(height)
+            .fillMaxWidth()
+            .padding(10.dp)
+            .background(color = Color.White)
+    ) {
         Image(
             painter = painterResource(R.drawable.journal_graph),
             contentDescription = "",

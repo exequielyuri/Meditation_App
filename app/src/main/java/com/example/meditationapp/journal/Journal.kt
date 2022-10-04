@@ -1,11 +1,8 @@
 package com.example.meditationapp.journal
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.example.meditationapp.ui.theme.Pink
 
 @Composable
 fun Journal() {
@@ -378,10 +375,8 @@ fun Journal() {
         modifier = Modifier
             .fillMaxHeight()
             .fillMaxWidth()
-            .background(color = Pink)
     ) {
         JournalGraph(entries = list)
-        
         JournalPages(entries = list)
     }
 }

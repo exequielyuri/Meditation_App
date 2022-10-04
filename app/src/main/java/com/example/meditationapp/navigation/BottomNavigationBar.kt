@@ -4,17 +4,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.meditationapp.ui.theme.Inter
 
 @Composable
 fun BottomNavigationBar(
@@ -33,17 +34,19 @@ fun BottomNavigationBar(
     ) {
         val journalSelected = "journal" == backStackEntry.value?.destination?.route
         val settingsSelected = "settings" == backStackEntry.value?.destination?.route
-        val dashboardSelected = "dashboard" == backStackEntry.value?.destination?.route
 
         BottomNavigationItem(
             selected = journalSelected,
-            onClick = { navController.navigate("journal") },
+            onClick = {
+                navController.navigate(Screen.Journal.route) {
+                    launchSingleTop = true
+                }},
             selectedContentColor = selectColor,
             unselectedContentColor = unselectColor,
             icon = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
-                        imageVector = Icons.Default.Add,
+                        painter = painterResource(R.drawable.ic_baseline_book_24),
                         contentDescription = "Journal",
                         modifier = Modifier.size(25.dp)
                     )
@@ -52,7 +55,8 @@ fun BottomNavigationBar(
                         Text(
                             text = "Journal",
                             textAlign = TextAlign.Center,
-                            fontSize = 12.sp
+                            fontSize = 12.sp,
+                            fontFamily = Inter
                         )
                     }
                 }
@@ -67,7 +71,10 @@ fun BottomNavigationBar(
         
         BottomNavigationItem(
             selected = settingsSelected,
-            onClick = { navController.navigate("settings") },
+            onClick = {
+                navController.navigate(Screen.Settings.route) {
+                    launchSingleTop = true
+                }},
             selectedContentColor = selectColor,
             unselectedContentColor = unselectColor,
             icon = {
@@ -82,7 +89,8 @@ fun BottomNavigationBar(
                         Text(
                             text = "Settings",
                             textAlign = TextAlign.Center,
-                            fontSize = 12.sp
+                            fontSize = 12.sp,
+                            fontFamily = Inter
                         )
                     }
                 }
