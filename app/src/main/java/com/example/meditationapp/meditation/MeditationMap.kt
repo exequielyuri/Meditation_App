@@ -22,18 +22,24 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
+import androidx.navigation.NavHostController
 import kotlin.math.roundToInt
 import com.example.meditationapp.R
+import com.example.meditationapp.Screen
 
 @Composable
-fun MeditationGraph() {
+fun MeditationMap(
+    navController: NavHostController,
+    //meditationList: List<Meditation>
+) {
+
     val constraints = ConstraintSet {
-        val posture = createRefFor(id = "posture")
-        val ice = createRefFor(id = "ice")
-        val trataka = createRefFor(id = "trataka")
-        val bee_breath = createRefFor(id = "bee_breath")
-        val mindfulness = createRefFor(id = "mindfulness")
-        val custom1 = createRefFor(id = "custom1")
+        val posture = createRefFor(id = Meditation.Posture.name)
+        val ice = createRefFor(id = Meditation.Ice.name)
+        val trataka = createRefFor(id = Meditation.Trataka.name)
+        val bee_breath = createRefFor(id = Meditation.BeesBreath.name)
+        val mindfulness = createRefFor(id = Meditation.Mindfulness.name)
+        val custom = createRefFor(id = Meditation.Custom.name)
 
         constrain(posture) {
             top.linkTo(parent.top)
@@ -66,7 +72,7 @@ fun MeditationGraph() {
             end.linkTo(parent.end, 200.dp)
         }
 
-        constrain(custom1) {
+        constrain(custom) {
             top.linkTo(posture.bottom, 190.dp)
             start.linkTo(parent.start, 160.dp)
             end.linkTo(parent.end)
@@ -106,7 +112,7 @@ fun MeditationGraph() {
             }
     ) {
         Image(
-            painter = painterResource(R.drawable.meditation_graph),
+            painter = painterResource(R.drawable.meditation_graph_broken_line),
             contentDescription = "",
             modifier = Modifier.requiredSize(graphSize))
 
@@ -117,15 +123,12 @@ fun MeditationGraph() {
 
         ) {
 
-            MeditationNode(
-                name = "posture",
-                size = 0.dp
-            )
-            MeditationNode(name = "ice")
-            MeditationNode(name = "trataka")
-            MeditationNode(name = "bee_breath")
-            MeditationNode(name = "mindfulness")
-            MeditationNode(name = "custom1")
+            MeditationNode(meditation = Meditation.Posture, navController = navController)
+            MeditationNode(meditation = Meditation.Ice, navController = navController)
+            MeditationNode(meditation = Meditation.Trataka, navController = navController)
+            MeditationNode(meditation = Meditation.BeesBreath, navController = navController)
+            MeditationNode(meditation = Meditation.Mindfulness, navController = navController)
+            MeditationNode(meditation = Meditation.Custom, navController = navController)
         }
     }
 }
@@ -133,13 +136,16 @@ fun MeditationGraph() {
 @Composable
 fun MeditationNode(
     modifier: Modifier = Modifier,
-    name: String,
-    size: Dp = 35.dp
+    size: Dp = 35.dp,
+    navController: NavHostController,
+    meditation: Meditation
 ) {
     IconButton(
-        onClick = { /*TODO*/ },
+        onClick = {
+            navController.navigate(Screen.MeditationScreen.withArgs(meditation.name))
+        },
         modifier = modifier
-            .layoutId(name)
+            .layoutId(meditation.name)
             .size(size)
     ) {
         Icon(
@@ -149,4 +155,3 @@ fun MeditationNode(
         )
     }
 }
-
