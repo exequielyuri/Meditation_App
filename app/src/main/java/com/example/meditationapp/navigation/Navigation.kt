@@ -1,13 +1,13 @@
 package com.example.meditationapp.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -25,8 +25,8 @@ import com.example.meditationapp.meditation.MeditationMap
 import com.example.meditationapp.meditation.MeditationScreen
 import com.example.meditationapp.ui.theme.*
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.example.meditationapp.R
 
-@Preview
 @Composable
 fun Navigator() {
     val navController = rememberNavController()
@@ -43,18 +43,24 @@ fun Navigator() {
             val backStackEntry = navController.currentBackStackEntryAsState()
             val mapSelected = "meditation_map" == backStackEntry.value?.destination?.route
 
-            OutlinedButton(
+            Button(
                 onClick = { navController.navigate("meditation_map") { launchSingleTop = true } },
-                modifier = Modifier.size(60.dp),
-                shape = CircleShape,
-                contentPadding = PaddingValues(0.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = if (mapSelected) unselectColor else uiColor),
+                modifier = Modifier
+                    .width(65.dp)
+                    .height(73.dp),
+                shape = RoundedHexagon,
+                contentPadding = PaddingValues(17.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = uiColor),
                 elevation = ButtonDefaults.elevation(
                     defaultElevation = 3.dp,
                     pressedElevation = 0.dp
                 ),
             ) {
-
+                Icon(
+                    painter = painterResource(R.drawable.lotus),
+                    contentDescription = null,
+                    tint = if (mapSelected) selectColor else unselectColor
+                )
             }
         },
         floatingActionButtonPosition = FabPosition.Center,

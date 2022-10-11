@@ -1,14 +1,14 @@
 package com.example.meditationapp
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.meditationapp.ui.theme.Inter
+import com.example.meditationapp.ui.theme.RoundedHexagonCutout
 
 @Composable
 fun BottomNavigationBar(
@@ -28,7 +29,15 @@ fun BottomNavigationBar(
     val backStackEntry = navController.currentBackStackEntryAsState()
 
     BottomAppBar(
-        cutoutShape = MaterialTheme.shapes.small.copy(CornerSize(percent = 50)),
+        modifier = Modifier
+            .graphicsLayer {
+                shape = RoundedCornerShape(
+                   topStart = 13.dp,
+                   topEnd = 13.dp
+                )
+                clip = true
+            },
+        cutoutShape = RoundedHexagonCutout,
         elevation = 40.dp,
         backgroundColor = uiColor
     ) {
@@ -46,7 +55,7 @@ fun BottomNavigationBar(
             icon = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_baseline_book_24),
+                        painter = painterResource(R.drawable.journal),
                         contentDescription = "Journal",
                         modifier = Modifier.size(25.dp)
                     )
@@ -67,7 +76,8 @@ fun BottomNavigationBar(
             selected = false,
             enabled = false,
             onClick = {},
-            icon = {})
+            icon = {}
+        )
         
         BottomNavigationItem(
             selected = settingsSelected,
