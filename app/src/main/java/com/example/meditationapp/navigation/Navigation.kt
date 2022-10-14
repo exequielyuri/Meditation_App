@@ -1,10 +1,14 @@
 package com.example.meditationapp.navigation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -38,29 +42,37 @@ fun Navigator() {
 
     systemUiController.setSystemBarsColor(uiColor)
 
+    val isVisible = rememberSaveable { mutableStateOf(true) }
+
     Scaffold(
         floatingActionButton = {
             val backStackEntry = navController.currentBackStackEntryAsState()
             val mapSelected = "meditation_map" == backStackEntry.value?.destination?.route
 
-            Button(
-                onClick = { navController.navigate("meditation_map") { launchSingleTop = true } },
-                modifier = Modifier
-                    .width(65.dp)
-                    .height(73.dp),
-                shape = RoundedHexagon,
-                contentPadding = PaddingValues(17.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = uiColor),
-                elevation = ButtonDefaults.elevation(
-                    defaultElevation = 3.dp,
-                    pressedElevation = 0.dp
-                ),
+            AnimatedVisibility(
+                visible = isVisible.value,
+                enter = slideInVertically(initialOffsetY = {it}),
+                exit = slideOutVertically(targetOffsetY = {it})
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.lotus),
-                    contentDescription = null,
-                    tint = if (mapSelected) selectColor else unselectColor
-                )
+                Button(
+                    onClick = { navController.navigate("meditation_map") { launchSingleTop = true } },
+                    modifier = Modifier
+                        .width(65.dp)
+                        .height(73.dp),
+                    shape = RoundedHexagon,
+                    contentPadding = PaddingValues(17.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = uiColor),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 3.dp,
+                        pressedElevation = 0.dp
+                    ),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.lotus),
+                        contentDescription = null,
+                        tint = if (mapSelected) selectColor else unselectColor
+                    )
+                }
             }
         },
         floatingActionButtonPosition = FabPosition.Center,
@@ -68,27 +80,38 @@ fun Navigator() {
         bottomBar = {
             BottomNavigationBar(
                 navController = navController,
+                isVisible = isVisible,
                 selectColor = selectColor,
                 uiColor = uiColor,
                 unselectColor = unselectColor
             )
         }
     ) {
-        Navigation(navController = navController)
+        Navigation(
+            navController = navController,
+            isVisible = isVisible
+        )
     }
+
 }
 
 @Composable
-fun Navigation(navController: NavHostController) {
+fun Navigation(
+    navController: NavHostController,
+    isVisible: MutableState<Boolean>
+) {
 
     NavHost(navController = navController, Screen.MeditationMap.route) {
         composable(Screen.MeditationMap.route) {
+            isVisible.value = true
             MeditationMap(navController = navController)
         }
         composable(Screen.Journal.route) {
+            isVisible.value = true
             Journal()
         }
         composable(Screen.Settings.route) {
+            isVisible.value = true
             Settings()
         }
         composable(
@@ -99,15 +122,20 @@ fun Navigation(navController: NavHostController) {
                 }
             )
         ) { entry ->
+            isVisible.value = false
             val meditation = when(entry.arguments?.getString("meditationName")) {
                 "Posture" -> Meditation.Posture
                 "Trataka" -> Meditation.Trataka
                 "Bee's Breath" -> Meditation.BeesBreath
                 "Mindfulness" -> Meditation.Mindfulness
                 "Ice" -> Meditation.Ice
+                "Third Eye" -> Meditation.ThirdEye
                 else -> Meditation.Custom
             }
-            MeditationScreen(meditation = meditation)
+            MeditationScreen(
+                meditation = meditation,
+                navController = navController
+            )
         }
     }
 

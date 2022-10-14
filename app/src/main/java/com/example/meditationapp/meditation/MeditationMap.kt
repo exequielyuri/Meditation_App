@@ -39,7 +39,7 @@ fun MeditationMap(
         val trataka = createRefFor(id = Meditation.Trataka.name)
         val bee_breath = createRefFor(id = Meditation.BeesBreath.name)
         val mindfulness = createRefFor(id = Meditation.Mindfulness.name)
-        val custom = createRefFor(id = Meditation.Custom.name)
+        val thirdeye = createRefFor(id = Meditation.ThirdEye.name)
 
         constrain(posture) {
             top.linkTo(parent.top)
@@ -72,7 +72,7 @@ fun MeditationMap(
             end.linkTo(parent.end, 200.dp)
         }
 
-        constrain(custom) {
+        constrain(thirdeye) {
             top.linkTo(posture.bottom, 190.dp)
             start.linkTo(parent.start, 160.dp)
             end.linkTo(parent.end)
@@ -128,7 +128,7 @@ fun MeditationMap(
             MeditationNode(meditation = Meditation.Trataka, navController = navController)
             MeditationNode(meditation = Meditation.BeesBreath, navController = navController)
             MeditationNode(meditation = Meditation.Mindfulness, navController = navController)
-            MeditationNode(meditation = Meditation.Custom, navController = navController)
+            MeditationNode(meditation = Meditation.ThirdEye, navController = navController)
         }
     }
 }
