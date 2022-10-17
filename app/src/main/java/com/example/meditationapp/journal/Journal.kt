@@ -373,8 +373,7 @@ fun Journal() {
 
     Column(
         modifier = Modifier
-            .fillMaxHeight()
-            .fillMaxWidth()
+            .fillMaxSize()
     ) {
         JournalGraph(entries = list)
         JournalPages(entries = list)

@@ -48,7 +48,7 @@ fun BottomNavigationBar(
                     clip = true
                 },
             cutoutShape = RoundedHexagonCutout,
-            elevation = 40.dp,
+            elevation = 4.dp,
             backgroundColor = uiColor
         ) {
             val journalSelected = "journal" == backStackEntry.value?.destination?.route
@@ -56,10 +56,7 @@ fun BottomNavigationBar(
 
             BottomNavigationItem(
                 selected = journalSelected,
-                onClick = {
-                    navController.navigate(Screen.Journal.route) {
-                        launchSingleTop = true
-                    }},
+                onClick = { navController.navigate(Screen.Journal.route) { launchSingleTop = true } },
                 selectedContentColor = selectColor,
                 unselectedContentColor = unselectColor,
                 icon = {
