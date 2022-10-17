@@ -1,86 +1,112 @@
 package com.example.meditationapp.journal
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.meditationapp.ui.theme.PurpleLightLight
 import kotlin.math.roundToInt
-import com.example.meditationapp.R
-import com.example.meditationapp.ui.theme.DarkYellowGradient
-import com.example.meditationapp.ui.theme.LightYellowGradient
+import com.example.meditationapp.ui.theme.*
 
 @Composable
 fun JournalGraph(
     modifier: Modifier = Modifier,
     entries: List<JournalEntry>,
-    graphBarGradient: Brush = Brush.verticalGradient(colors = listOf(LightYellowGradient, DarkYellowGradient)),
-    fontColor: Color = PurpleLightLight,
-    height: Dp = 210.dp
+    fontColor: Color = Purple45,
+    horizontalPad: Dp = 15.dp,
+    itemWidth: Dp = 25.dp,
+    backgroundColor: Color = Color.White
 ) {
 
-    Box(
+    Column(
         modifier = modifier
-            .height(height)
             .fillMaxWidth()
-            .padding(10.dp)
-            .background(color = Color.White)
+            .background(backgroundColor),
+        horizontalAlignment = Alignment.Start
     ) {
-        Image(
-            painter = painterResource(R.drawable.journal_graph),
-            contentDescription = "",
+        Text(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
+                .padding(top = 10.dp, bottom = 5.dp)
+                .padding(horizontal = horizontalPad),
+            text = "Recent Meditations",
+            color = Purple50,
+            fontSize = 24.sp,
+            fontFamily = Roboto,
+            fontWeight = FontWeight.Bold
         )
-        LazyRow(
-            verticalAlignment = Alignment.Bottom,
-            reverseLayout = true,
+
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(horizontal = 20.dp, vertical = 30.dp)
+                .padding(horizontal = horizontalPad)
+                .background(
+                    brush = Brush.verticalGradient(
+                        listOf(
+                            Color.White,
+                            Purple20
+                        ),
+
+                    ),
+                    shape = RoundedCornerShape(10.dp)
+                ),
+
         ) {
-            val max = 30 * 60 // 30 minutes is max (for now), above 30 mins, just make it full
-            val maxDp = 100
-            val spaceBetweenBar = 15.dp
+            Spacer(modifier = Modifier.height(15.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                val max = 30 * 60 // 30 minutes is max (for now), above 30 mins, just make it full
+                val maxDp = 100
 
-            items(items = entries, itemContent = { item ->
+                val latestDay = entries.first().day
 
-                val day = when(item.day) {
-                    1 -> "Sun"
-                    2 -> "Mon"
-                    3 -> "Tue"
-                    4 -> "Wed"
-                    5 -> "Thu"
-                    6 -> "Fri"
-                    else -> "Sat"
+                for (curr in latestDay downTo 1) {
+                    val seconds = entries.elementAt(curr).durationMin * 60 + entries.elementAt(curr).durationSec
+                    val height = if (seconds>30*60) maxDp.dp else (seconds.toFloat() / max * maxDp).roundToInt().dp
+
+                    JournalBar(
+                        width = itemWidth,
+                        height = height,
+                        color = fontColor,
+                    )
                 }
+            }
+        }
 
-                val seconds = item.durationMin * 60 + item.durationSec
-                val height = if (seconds>30*60) maxDp.dp else (seconds.toFloat() / max * maxDp).roundToInt().dp
 
-                Spacer(modifier = Modifier.width(spaceBetweenBar))
-                JournalBar(
-                    height = height,
-                    gradient = graphBarGradient,
-                    label = day,
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp, bottom = 13.dp)
+                .padding(horizontal = horizontalPad),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val daysInWeek = listOf("S", "M", "T", "W", "T", "F", "S")
+
+            daysInWeek.forEach() { day ->
+                Text(
+                    modifier = Modifier.width(itemWidth),
+                    text = day,
+                    color = fontColor,
                     fontSize = 16.sp,
-                    fontColor = fontColor
+                    fontWeight = FontWeight.Medium,
+                    fontFamily = Roboto,
+                    textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.width(spaceBetweenBar))
-            })
-
+            }
         }
     }
 }
