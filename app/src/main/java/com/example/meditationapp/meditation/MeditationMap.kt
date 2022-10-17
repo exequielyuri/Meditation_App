@@ -112,10 +112,11 @@ fun MeditationMap(
             }
     ) {
         Image(
-            painter = painterResource(R.drawable.meditation_graph_broken_line),
-            contentDescription = "",
-            modifier = Modifier.requiredSize(graphSize))
-
+            painter = painterResource(R.drawable.meditation_graph_gradient),
+            contentDescription = null,
+            modifier = Modifier.requiredSize(graphSize)
+        )
+        
         ConstraintLayout(
         constraints,
         modifier = Modifier
@@ -149,7 +150,7 @@ fun MeditationNode(
             .size(size)
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.meditation_ball_svg),
+            painter = painterResource(id = R.drawable.meditation_node_flat),
             tint = Color.Unspecified,
             contentDescription = null
         )

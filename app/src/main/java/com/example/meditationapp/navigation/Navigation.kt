@@ -3,8 +3,8 @@ package com.example.meditationapp.navigation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -54,20 +54,16 @@ fun Navigator() {
                 enter = slideInVertically(initialOffsetY = {it}),
                 exit = slideOutVertically(targetOffsetY = {it})
             ) {
-                Button(
+                FloatingActionButton(
                     onClick = { navController.navigate("meditation_map") { launchSingleTop = true } },
                     modifier = Modifier
                         .width(65.dp)
                         .height(73.dp),
                     shape = RoundedHexagon,
-                    contentPadding = PaddingValues(17.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = uiColor),
-                    elevation = ButtonDefaults.elevation(
-                        defaultElevation = 3.dp,
-                        pressedElevation = 0.dp
-                    ),
+                    backgroundColor = uiColor
                 ) {
                     Icon(
+                        modifier = Modifier.padding(17.dp),
                         painter = painterResource(R.drawable.lotus),
                         contentDescription = null,
                         tint = if (mapSelected) selectColor else unselectColor

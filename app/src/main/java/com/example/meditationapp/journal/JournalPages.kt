@@ -1,21 +1,20 @@
 package com.example.meditationapp.journal
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.meditationapp.ui.theme.*
@@ -24,15 +23,20 @@ import com.example.meditationapp.ui.theme.*
 fun JournalPages(
     modifier: Modifier = Modifier,
     entries: List<JournalEntry>,
+    backgroundColor: Color = Purple20
 ) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxWidth()
-            .fillMaxWidth()
-            .background(Purple20)
-    ) { items(items = entries, itemContent = { item -> PageCard(entry = item) }) }
+    Box(
+        modifier = Modifier.background(backgroundColor)
+    ) {
+        BottomShadow()
+        LazyColumn(
+            modifier = modifier
+                .fillMaxWidth()
+        ) { items(items = entries, itemContent = { item -> PageCard(entry = item) }) }
+    }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PageCard (entry: JournalEntry) {
     Card(
@@ -40,10 +44,10 @@ fun PageCard (entry: JournalEntry) {
             .fillMaxWidth()
             .height(130.dp)
             .padding(horizontal = 15.dp)
-            .padding(top = 18.dp)
-            .clickable { },
-        elevation = 3.dp,
-        shape = MaterialTheme.shapes.small.copy(CornerSize(8.dp))
+            .padding(top = 18.dp),
+        shape = MaterialTheme.shapes.small.copy(CornerSize(8.dp)),
+        onClick = {},
+        elevation = 4.dp
     ) {
         Row(
             modifier = Modifier
@@ -128,4 +132,21 @@ fun PageCard (entry: JournalEntry) {
             }
         }
     }
+}
+
+@Composable
+fun BottomShadow(alpha: Float = .1f, height: Dp = 7.dp) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(height)
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Black.copy(alpha = alpha),
+                        Color.Transparent,
+                    )
+                )
+            )
+    )
 }
