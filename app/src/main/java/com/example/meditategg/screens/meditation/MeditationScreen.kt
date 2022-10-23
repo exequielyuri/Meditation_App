@@ -1,4 +1,4 @@
-package com.example.meditationapp.meditation
+package com.example.meditategg.screens.meditation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,17 +13,15 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.meditationapp.R
-import com.example.meditationapp.Screen
-import com.example.meditationapp.ui.theme.*
+import com.example.meditategg.R
+import com.example.meditategg.common.composable.ExpandableCard
+import com.example.meditategg.common.composable.GradientButton
+import com.example.meditategg.screens.Screen
+import com.example.meditategg.theme.*
 import kotlinx.coroutines.delay
 import java.text.DecimalFormat
 import kotlin.time.Duration.Companion.seconds
@@ -120,7 +118,7 @@ fun MeditationScreen(
                         modifier = Modifier
                             .height(2.dp)
                     )
-                    InstructionCard(instruction = item)
+                    ExpandableCard(instruction = item)
                 })
             }
 
@@ -177,48 +175,6 @@ fun MeditationScreen(
                     }
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun GradientButton(
-    modifier: Modifier = Modifier,
-    text: String = "",
-    textColor: Color = Color.Black,
-    fontSize: TextUnit = 16.sp,
-    fontFamily: FontFamily = Roboto,
-    fontWeight: FontWeight = FontWeight.Normal,
-    style: TextStyle = TextStyle.Default,
-    elevation: ButtonElevation = ButtonDefaults.elevation(),
-    gradient: Brush,
-    horizontalPad: Dp = 16.dp,
-    verticalPad: Dp = 8.dp,
-    width: Dp = 160.dp,
-    onClick: () -> Unit = {}
-) {
-    Button(
-        modifier = modifier.width(width),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-        contentPadding = PaddingValues(),
-        elevation = elevation,
-        onClick = onClick
-    ) {
-        Box(
-            modifier = Modifier
-                .width(width)
-                .background(brush = gradient)
-                .padding(horizontal = horizontalPad, vertical = verticalPad),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = text,
-                color = textColor,
-                fontSize = fontSize,
-                fontFamily = fontFamily,
-                fontWeight = fontWeight,
-                style = style
-            )
         }
     }
 }

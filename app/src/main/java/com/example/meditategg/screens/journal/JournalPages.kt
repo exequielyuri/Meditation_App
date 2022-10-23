@@ -1,4 +1,4 @@
-package com.example.meditationapp.journal
+package com.example.meditategg.screens.journal
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,15 +9,15 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.meditationapp.ui.theme.*
+import com.example.meditategg.common.composable.BottomShadow
+import com.example.meditategg.model.JournalEntry
+import com.example.meditategg.theme.*
 
 @Composable
 fun JournalPages(
@@ -38,7 +38,7 @@ fun JournalPages(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun PageCard (entry: JournalEntry) {
+fun PageCard(entry: JournalEntry) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -132,21 +132,4 @@ fun PageCard (entry: JournalEntry) {
             }
         }
     }
-}
-
-@Composable
-fun BottomShadow(alpha: Float = .1f, height: Dp = 7.dp) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(height)
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color.Black.copy(alpha = alpha),
-                        Color.Transparent,
-                    )
-                )
-            )
-    )
 }

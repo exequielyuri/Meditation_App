@@ -1,4 +1,4 @@
-package com.example.meditationapp.meditation
+package com.example.meditategg.screens.meditation
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -11,7 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -24,8 +23,8 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
 import androidx.navigation.NavHostController
 import kotlin.math.roundToInt
-import com.example.meditationapp.R
-import com.example.meditationapp.Screen
+import com.example.meditategg.R
+import com.example.meditategg.screens.Screen
 
 @Composable
 fun MeditationMap(
@@ -99,7 +98,7 @@ fun MeditationMap(
             .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
             .pointerInput(Unit) {
                 detectDragGestures { change, dragAmount ->
-                    change.consumeAllChanges()
+                    change.consume()
                     offsetX = (offsetX + dragAmount.x).coerceIn(
                         minOffsetX,
                         maxOffsetX

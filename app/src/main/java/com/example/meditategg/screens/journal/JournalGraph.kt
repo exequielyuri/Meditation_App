@@ -1,4 +1,4 @@
-package com.example.meditationapp.journal
+package com.example.meditategg.screens.journal
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,8 +14,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.meditategg.common.composable.GraphBar
+import com.example.meditategg.model.JournalEntry
 import kotlin.math.roundToInt
-import com.example.meditationapp.ui.theme.*
+import com.example.meditategg.theme.*
 
 @Composable
 fun JournalGraph(
@@ -76,7 +78,7 @@ fun JournalGraph(
                     val seconds = entries.elementAt(curr).durationMin * 60 + entries.elementAt(curr).durationSec
                     val height = if (seconds>30*60) maxDp.dp else (seconds.toFloat() / max * maxDp).roundToInt().dp
 
-                    JournalBar(
+                    GraphBar(
                         width = itemWidth,
                         height = height,
                         color = fontColor,

@@ -1,4 +1,4 @@
-package com.example.meditationapp
+package com.example.meditategg
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -19,8 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.meditationapp.ui.theme.Inter
-import com.example.meditationapp.ui.theme.RoundedHexagonCutout
+import com.example.meditategg.screens.Screen
+import com.example.meditategg.theme.Inter
+import com.example.meditategg.theme.RoundedHexagonCutout
 
 @Composable
 fun BottomNavigationBar(

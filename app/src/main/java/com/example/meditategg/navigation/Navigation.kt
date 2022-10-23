@@ -1,4 +1,4 @@
-package com.example.meditationapp.navigation
+package com.example.meditategg.navigation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -20,16 +20,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.meditationapp.BottomNavigationBar
-import com.example.meditationapp.Screen
-import com.example.meditationapp.Settings
-import com.example.meditationapp.journal.Journal
-import com.example.meditationapp.meditation.Meditation
-import com.example.meditationapp.meditation.MeditationMap
-import com.example.meditationapp.meditation.MeditationScreen
-import com.example.meditationapp.ui.theme.*
+import com.example.meditategg.BottomNavigationBar
+import com.example.meditategg.screens.Screen
+import com.example.meditategg.screens.journal.Journal
+import com.example.meditategg.screens.meditation.Meditation
+import com.example.meditategg.screens.meditation.MeditationMap
+import com.example.meditategg.screens.meditation.MeditationScreen
+import com.example.meditategg.theme.*
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.example.meditationapp.R
+import com.example.meditategg.R
+import com.example.meditategg.screens.settings.Settings
 
 @Composable
 fun Navigator() {
@@ -82,10 +82,11 @@ fun Navigator() {
                 unselectColor = unselectColor
             )
         }
-    ) {
+    ) { innerPaddingModifier ->
         Navigation(
             navController = navController,
-            isVisible = isVisible
+            isVisible = isVisible,
+            modifier = Modifier.padding(innerPaddingModifier)
         )
     }
 
@@ -93,11 +94,16 @@ fun Navigator() {
 
 @Composable
 fun Navigation(
+    modifier: Modifier = Modifier,
     navController: NavHostController,
     isVisible: MutableState<Boolean>
 ) {
 
-    NavHost(navController = navController, Screen.MeditationMap.route) {
+    NavHost(
+        navController = navController,
+        startDestination = Screen.MeditationMap.route,
+        modifier = modifier,
+    ) {
         composable(Screen.MeditationMap.route) {
             isVisible.value = true
             MeditationMap(navController = navController)

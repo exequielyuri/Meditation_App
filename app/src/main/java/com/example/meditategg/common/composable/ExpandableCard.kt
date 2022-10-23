@@ -1,4 +1,4 @@
-package com.example.meditationapp.meditation
+package com.example.meditategg.common.composable
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -24,14 +24,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.style.TextOverflow
-import com.example.meditationapp.R
-import com.example.meditationapp.journal.BottomShadow
-import com.example.meditationapp.ui.theme.*
-
+import com.example.meditategg.R
+import com.example.meditategg.model.Instruction
+import com.example.meditategg.theme.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun InstructionCard(
+fun ExpandableCard(
     modifier: Modifier = Modifier,
     instruction: Instruction,
     contentColor: Color = Color.White,
@@ -126,7 +125,7 @@ fun InstructionCard(
 @Preview
 @Composable
 fun InstructionCardPreview() {
-    InstructionCard(
+    ExpandableCard(
         instruction = Instruction(
             "Place middle finger to forehead",
             "Take your middle finger and hover it a centimeter from the middle of your eyebrows (don't touch)."

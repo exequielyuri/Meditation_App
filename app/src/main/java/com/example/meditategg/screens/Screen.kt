@@ -1,4 +1,4 @@
-package com.example.meditationapp
+package com.example.meditategg.screens
 
 sealed class Screen(val route: String) {
     object MeditationMap : Screen("meditation_map")

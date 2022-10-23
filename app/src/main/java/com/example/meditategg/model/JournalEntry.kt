@@ -1,6 +1,7 @@
-package com.example.meditationapp.journal
+package com.example.meditategg.model
 
-class JournalEntry(
+data class JournalEntry(
+    val id: String = "",
     val day: Int,
     val date: Int,
     val month: Int,
@@ -8,6 +9,5 @@ class JournalEntry(
     val meditation: String, // change later to "meditation: Meditation"
     val durationMin: Int,
     val durationSec: Int,
-    val content: String
-    ) {
-}
+    val content: String = "",
+)

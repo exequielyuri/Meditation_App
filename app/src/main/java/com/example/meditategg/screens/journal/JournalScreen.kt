@@ -1,8 +1,9 @@
-package com.example.meditationapp.journal
+package com.example.meditategg.screens.journal
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.meditategg.model.JournalEntry
 
 @Composable
 fun Journal() {

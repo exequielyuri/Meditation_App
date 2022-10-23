@@ -1,4 +1,4 @@
-package com.example.meditationapp.journal
+package com.example.meditategg.common.composable
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun JournalBar(
+fun GraphBar(
     modifier: Modifier = Modifier,
     width: Dp,
     height: Dp = 0.dp,

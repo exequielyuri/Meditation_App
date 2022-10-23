@@ -1,4 +1,4 @@
-package com.example.meditationapp
+package com.example.meditategg
 
 import org.junit.Test
 
