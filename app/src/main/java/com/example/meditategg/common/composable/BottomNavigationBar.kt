@@ -1,4 +1,4 @@
-package com.example.meditategg
+package com.example.meditategg.common.composable
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -19,7 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.meditategg.screens.Screen
+import com.example.meditategg.JOURNAL_SCREEN
+import com.example.meditategg.R
+import com.example.meditategg.SETTINGS_SCREEN
 import com.example.meditategg.theme.Inter
 import com.example.meditategg.theme.RoundedHexagonCutout
 
@@ -52,12 +54,12 @@ fun BottomNavigationBar(
             elevation = 4.dp,
             backgroundColor = uiColor
         ) {
-            val journalSelected = "journal" == backStackEntry.value?.destination?.route
-            val settingsSelected = "settings" == backStackEntry.value?.destination?.route
+            val journalSelected = JOURNAL_SCREEN == backStackEntry.value?.destination?.route
+            val settingsSelected = SETTINGS_SCREEN == backStackEntry.value?.destination?.route
 
             BottomNavigationItem(
                 selected = journalSelected,
-                onClick = { navController.navigate(Screen.Journal.route) { launchSingleTop = true } },
+                onClick = { navController.navigate(JOURNAL_SCREEN) { launchSingleTop = true } },
                 selectedContentColor = selectColor,
                 unselectedContentColor = unselectColor,
                 icon = {
@@ -90,7 +92,7 @@ fun BottomNavigationBar(
             BottomNavigationItem(
                 selected = settingsSelected,
                 onClick = {
-                    navController.navigate(Screen.Settings.route) {
+                    navController.navigate(SETTINGS_SCREEN) {
                         launchSingleTop = true
                     }},
                 selectedContentColor = selectColor,
