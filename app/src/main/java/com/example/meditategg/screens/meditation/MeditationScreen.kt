@@ -17,10 +17,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.meditategg.MEDITATION_MAP_SCREEN
 import com.example.meditategg.R
 import com.example.meditategg.common.composable.ExpandableCard
 import com.example.meditategg.common.composable.GradientButton
-import com.example.meditategg.screens.Screen
 import com.example.meditategg.theme.*
 import kotlinx.coroutines.delay
 import java.text.DecimalFormat
@@ -62,7 +62,7 @@ fun MeditationScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(onClick = {
-                navController.navigate(Screen.MeditationMap.route)
+                navController.navigate(MEDITATION_MAP_SCREEN)
             }) {
                 Icon(
                     painter = painterResource(R.drawable.arrow_back),

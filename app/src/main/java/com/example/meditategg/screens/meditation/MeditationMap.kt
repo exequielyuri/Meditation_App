@@ -22,9 +22,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
 import androidx.navigation.NavHostController
+import com.example.meditategg.MEDITATION_SCREEN
 import kotlin.math.roundToInt
 import com.example.meditategg.R
-import com.example.meditategg.screens.Screen
 
 @Composable
 fun MeditationMap(
@@ -142,7 +142,7 @@ fun MeditationNode(
 ) {
     IconButton(
         onClick = {
-            navController.navigate(Screen.MeditationScreen.withArgs(meditation.name))
+            navController.navigate("$MEDITATION_SCREEN/${meditation.name}")
         },
         modifier = modifier
             .layoutId(meditation.name)
