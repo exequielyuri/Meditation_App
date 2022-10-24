@@ -6,7 +6,7 @@ data class JournalEntry(
     val date: Int,
     val month: Int,
     val year: Int,
-    val meditation: String, // change later to "meditation: Meditation"
+    val meditationName: String,
     val durationMin: Int,
     val durationSec: Int,
     val content: String = "",

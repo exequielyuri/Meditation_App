@@ -123,12 +123,12 @@ fun MeditationMap(
 
         ) {
 
-            MeditationNode(meditation = Meditation.Posture, navController = navController)
-            MeditationNode(meditation = Meditation.Ice, navController = navController)
-            MeditationNode(meditation = Meditation.Trataka, navController = navController)
-            MeditationNode(meditation = Meditation.BeesBreath, navController = navController)
-            MeditationNode(meditation = Meditation.Mindfulness, navController = navController)
-            MeditationNode(meditation = Meditation.ThirdEye, navController = navController)
+            MeditationNode(meditationName = Meditation.Posture.name, navController = navController)
+            MeditationNode(meditationName = Meditation.Ice.name, navController = navController)
+            MeditationNode(meditationName = Meditation.Trataka.name, navController = navController)
+            MeditationNode(meditationName = Meditation.BeesBreath.name, navController = navController)
+            MeditationNode(meditationName = Meditation.Mindfulness.name, navController = navController)
+            MeditationNode(meditationName = Meditation.ThirdEye.name, navController = navController)
         }
     }
 }
@@ -138,14 +138,14 @@ fun MeditationNode(
     modifier: Modifier = Modifier,
     size: Dp = 35.dp,
     navController: NavHostController,
-    meditation: Meditation
+    meditationName: String
 ) {
     IconButton(
         onClick = {
-            navController.navigate("$MEDITATION_SCREEN/${meditation.name}")
+            navController.navigate("$MEDITATION_SCREEN/${meditationName}")
         },
         modifier = modifier
-            .layoutId(meditation.name)
+            .layoutId(meditationName)
             .size(size)
     ) {
         Icon(
