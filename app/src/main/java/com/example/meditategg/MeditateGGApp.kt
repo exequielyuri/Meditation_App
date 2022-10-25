@@ -1,9 +1,8 @@
 package com.example.meditategg
 
+import android.annotation.SuppressLint
 import android.content.res.Resources
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -26,10 +25,13 @@ import androidx.navigation.navArgument
 import com.example.meditategg.common.composable.BottomNavigationBar
 import com.example.meditategg.common.snackbar.SnackbarManager
 import com.example.meditategg.screens.journal.Journal
+import com.example.meditategg.screens.login.LoginScreen
 import com.example.meditategg.screens.meditation.Meditation
 import com.example.meditategg.screens.meditation.MeditationMap
 import com.example.meditategg.screens.meditation.MeditationScreen
-import com.example.meditategg.screens.settings.Settings
+import com.example.meditategg.screens.settings.SettingsScreen
+import com.example.meditategg.screens.sign_up.SignUpScreen
+import com.example.meditategg.screens.splash.SplashScreen
 import com.example.meditategg.theme.MeditateGGTheme
 import com.example.meditategg.theme.Purple40
 import com.example.meditategg.theme.Purple50
@@ -38,10 +40,12 @@ import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.CoroutineScope
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MeditateGGApp() {
     MeditateGGTheme() {
         Surface(color = MaterialTheme.colors.background) {
+
             val appState = rememberAppState()
 
             val uiColor = Purple50
@@ -51,6 +55,16 @@ fun MeditateGGApp() {
             appState.changeSystemUiColor(uiColor)
 
             Scaffold(
+                scaffoldState = appState.scaffoldState,
+                snackbarHost = {
+                    SnackbarHost(
+                        hostState = it,
+                        modifier = Modifier.padding(8.dp),
+                        snackbar = { snackbarData ->
+                            Snackbar(snackbarData, contentColor = selectColor)
+                        }
+                    )
+                },
                 floatingActionButton = {
                     val backStackEntry = appState.navController.currentBackStackEntryAsState()
                     val mapSelected = MEDITATION_MAP_SCREEN == backStackEntry.value?.destination?.route
@@ -61,7 +75,7 @@ fun MeditateGGApp() {
                         exit = slideOutVertically(targetOffsetY = {it})
                     ) {
                         FloatingActionButton(
-                            onClick = { appState.navController.navigate(MEDITATION_MAP_SCREEN) { launchSingleTop = true } },
+                            onClick = { appState.clearAndNavigate(MEDITATION_MAP_SCREEN)},
                             modifier = Modifier
                                 .width(65.dp)
                                 .height(73.dp),
@@ -88,11 +102,10 @@ fun MeditateGGApp() {
                         unselectColor = unselectColor
                     )
                 }
-            ) { innerPaddingModifier ->
+            ) {
                 NavHost(
                     navController = appState.navController,
-                    startDestination = MEDITATION_MAP_SCREEN,
-                    modifier = Modifier.padding(innerPaddingModifier)
+                    startDestination = SPLASH_SCREEN,
                 ) { meditateggGraph(appState) }
             }
         }
@@ -104,7 +117,7 @@ fun rememberAppState(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     navController: NavHostController = rememberNavController(),
     systemUiController: SystemUiController = rememberSystemUiController(),
-    bottomBarVisible: MutableState<Boolean> = remember { mutableStateOf(true) },
+    bottomBarVisible: MutableState<Boolean> = remember { mutableStateOf(false) },
     snackbarManager: SnackbarManager = SnackbarManager,
     resources: Resources = resources(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
@@ -119,26 +132,38 @@ fun resources(): Resources {
     return LocalContext.current.resources
 }
 
-fun NavGraphBuilder.meditateggGraph(appState: MeditateGGAppState, ) {
+fun NavGraphBuilder.meditateggGraph(appState: MeditateGGAppState) {
     composable(MEDITATION_MAP_SCREEN) {
-        appState.bottomBarVisible.value = true
+        appState.showBottomBar()
         MeditationMap(navController = appState.navController)
     }
     composable(JOURNAL_SCREEN) {
-        appState.bottomBarVisible.value = true
         Journal()
     }
     composable(SETTINGS_SCREEN) {
-        appState.bottomBarVisible.value = true
-        Settings()
+        SettingsScreen(
+            restartApp = { route -> appState.clearAndNavigate(route) },
+            openScreen = { route -> appState.navigate(route) }
+        )
+    }
+    composable(LOGIN_SCREEN) {
+        appState.hideBottomBar()
+        LoginScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+    }
+    composable(SIGN_UP_SCREEN) {
+        appState.hideBottomBar()
+        SignUpScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+    }
+    composable(SPLASH_SCREEN) {
+        appState.hideBottomBar()
+        SplashScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
     }
     composable(
         route = "$MEDITATION_SCREEN$MEDITATION_NAME_ARG",
         arguments = listOf(navArgument(MEDITATION_NAME) { type = NavType.StringType })
     ) { entry ->
-        appState.bottomBarVisible.value = false
+        appState.hideBottomBar()
 
-        println("meditation name: ${entry.arguments?.getString(MEDITATION_NAME)}")
         val meditation = when(entry.arguments?.getString(MEDITATION_NAME)) {
             "Posture" -> Meditation.Posture
             "Trataka" -> Meditation.Trataka
