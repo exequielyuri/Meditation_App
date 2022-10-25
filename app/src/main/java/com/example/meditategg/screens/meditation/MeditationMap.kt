@@ -118,8 +118,7 @@ fun MeditationMap(
         
         ConstraintLayout(
         constraints,
-        modifier = Modifier
-            .requiredSize(graphSize)
+        modifier = Modifier.requiredSize(graphSize)
 
         ) {
 
