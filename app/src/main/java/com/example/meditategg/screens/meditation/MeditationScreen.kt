@@ -10,17 +10,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.meditategg.MEDITATION_MAP_SCREEN
+import com.example.meditategg.MAP_SCREEN
 import com.example.meditategg.R
 import com.example.meditategg.common.composable.ExpandableCard
 import com.example.meditategg.common.composable.GradientButton
+import com.example.meditategg.common.composable.MeditationCompletionDialog
+import com.example.meditategg.model.Meditation
 import com.example.meditategg.theme.*
 import kotlinx.coroutines.delay
 import java.text.DecimalFormat
@@ -30,11 +31,10 @@ import kotlin.time.Duration.Companion.seconds
 fun MeditationScreen(
     meditation: Meditation,
     navController: NavHostController,
-    itemColor: Color = Purple50,
     backgroundGradient: Brush = Brush.verticalGradient(
         listOf(
-            Color.White,
-            Purple20
+            MaterialTheme.colors.background,
+            MaterialTheme.colors.surface
         )
     )
 ) {
@@ -48,9 +48,7 @@ fun MeditationScreen(
         val openDialog = remember { mutableStateOf(false) }
 
         if (openDialog.value) {
-            CompletionDialog(
-                openDialog = openDialog
-            )
+            MeditationCompletionDialog(openDialog = openDialog)
         }
 
         Row(
@@ -62,20 +60,20 @@ fun MeditationScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(onClick = {
-                navController.navigate(MEDITATION_MAP_SCREEN)
+                navController.navigate(MAP_SCREEN)
             }) {
                 Icon(
                     painter = painterResource(R.drawable.arrow_back),
                     contentDescription = "Back",
-                    tint = itemColor
+                    tint = MaterialTheme.colors.primary
                 )
             }
 
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(
-                    painter = painterResource(R.drawable.info),
+                    painter = painterResource(R.drawable.ic_info),
                     contentDescription = "More Info",
-                    tint = itemColor
+                    tint = MaterialTheme.colors.primary
                 )
             }
         }
@@ -83,13 +81,13 @@ fun MeditationScreen(
 
         Text(
             text = meditation.name,
-            color = itemColor,
+            color = MaterialTheme.colors.primary,
             fontSize = 36.sp,
             fontFamily = Lora,
             fontWeight = FontWeight.SemiBold,
             style = MaterialTheme.typography.h4.copy(
                 shadow = Shadow(
-                    color = Color(0xaa2c133c),
+                    color = MaterialTheme.colors.secondaryVariant,
                     offset = Offset(0f, 3f),
                     blurRadius = 5f
                 )
@@ -141,21 +139,21 @@ fun MeditationScreen(
                             val df = DecimalFormat("00")
                             "${df.format(seconds/60)}:${df.format(seconds%60)}"
                         } else { "Meditate" },
-                    textColor = Color.White,
+                    textColor = MaterialTheme.colors.onPrimary,
                     fontSize = 18.sp,
                     fontFamily = Lora,
                     fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.h4.copy(
                         shadow = Shadow(
-                            color = Purple20,
+                            color = MaterialTheme.colors.surface,
                             offset = Offset(0f, 1f),
                             blurRadius = 1f
                         )
                     ),
                     gradient = Brush.horizontalGradient(
                         listOf(
-                            Purple50,
-                            Purple60
+                            MaterialTheme.colors.primary,
+                            MaterialTheme.colors.primaryVariant
                         )
                     ),
                     elevation = ButtonDefaults.elevation(
@@ -177,50 +175,4 @@ fun MeditationScreen(
             }
         }
     }
-}
-
-@Composable
-fun CompletionDialog(
-    openDialog: MutableState<Boolean>
-) {
-    AlertDialog(
-        onDismissRequest = { /*TODO*/ },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    openDialog.value = false
-                }
-            ) {
-                Text(
-                    text = "Done"
-                )
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    openDialog.value = false
-                }
-            ) {
-                Text(
-                    text = "Retry"
-                )
-            }
-        },
-        text = {
-            var text by remember { mutableStateOf("") }
-
-            Column {
-                Text(
-                    text = "You have meditated. Would you like to write about your experience?"
-                )
-
-                OutlinedTextField(
-                    value = text,
-                    onValueChange = {text = it},
-                    maxLines = 4
-                )
-            }
-        }
-    )
 }

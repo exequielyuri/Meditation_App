@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -24,17 +23,15 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.meditategg.common.composable.BottomNavigationBar
 import com.example.meditategg.common.snackbar.SnackbarManager
-import com.example.meditategg.screens.journal.Journal
 import com.example.meditategg.screens.login.LoginScreen
-import com.example.meditategg.screens.meditation.Meditation
-import com.example.meditategg.screens.meditation.MeditationMap
+import com.example.meditategg.model.Meditation
+import com.example.meditategg.screens.journal.JournalScreen
+import com.example.meditategg.screens.map.MapScreen
 import com.example.meditategg.screens.meditation.MeditationScreen
 import com.example.meditategg.screens.settings.SettingsScreen
 import com.example.meditategg.screens.sign_up.SignUpScreen
 import com.example.meditategg.screens.splash.SplashScreen
 import com.example.meditategg.theme.MeditateGGTheme
-import com.example.meditategg.theme.Purple40
-import com.example.meditategg.theme.Purple50
 import com.example.meditategg.theme.RoundedHexagon
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -48,11 +45,7 @@ fun MeditateGGApp() {
 
             val appState = rememberAppState()
 
-            val uiColor = Purple50
-            val selectColor = Color.White
-            val unselectColor = Purple40
-
-            appState.changeSystemUiColor(uiColor)
+            appState.changeSystemUiColor(MaterialTheme.colors.primary)
 
             Scaffold(
                 scaffoldState = appState.scaffoldState,
@@ -61,13 +54,16 @@ fun MeditateGGApp() {
                         hostState = it,
                         modifier = Modifier.padding(8.dp),
                         snackbar = { snackbarData ->
-                            Snackbar(snackbarData, contentColor = selectColor)
+                            Snackbar(
+                                snackbarData,
+                                contentColor = MaterialTheme.colors.onPrimary
+                            )
                         }
                     )
                 },
                 floatingActionButton = {
                     val backStackEntry = appState.navController.currentBackStackEntryAsState()
-                    val mapSelected = MEDITATION_MAP_SCREEN == backStackEntry.value?.destination?.route
+                    val mapSelected = MAP_SCREEN == backStackEntry.value?.destination?.route
 
                     AnimatedVisibility(
                         visible = appState.bottomBarVisible.value,
@@ -75,18 +71,18 @@ fun MeditateGGApp() {
                         exit = slideOutVertically(targetOffsetY = {it})
                     ) {
                         FloatingActionButton(
-                            onClick = { appState.clearAndNavigate(MEDITATION_MAP_SCREEN)},
+                            onClick = { appState.clearAndNavigate(MAP_SCREEN)},
                             modifier = Modifier
                                 .width(65.dp)
                                 .height(73.dp),
                             shape = RoundedHexagon,
-                            backgroundColor = uiColor
+                            backgroundColor = MaterialTheme.colors.primary
                         ) {
                             Icon(
                                 modifier = Modifier.padding(17.dp),
-                                painter = painterResource(R.drawable.lotus),
+                                painter = painterResource(R.drawable.ic_lotus),
                                 contentDescription = null,
-                                tint = if (mapSelected) selectColor else unselectColor
+                                tint = if (mapSelected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSecondary
                             )
                         }
                     }
@@ -97,9 +93,9 @@ fun MeditateGGApp() {
                     BottomNavigationBar(
                         navController = appState.navController,
                         isVisible = appState.bottomBarVisible,
-                        selectColor = selectColor,
-                        uiColor = uiColor,
-                        unselectColor = unselectColor
+                        selectColor = MaterialTheme.colors.onPrimary,
+                        uiColor = MaterialTheme.colors.primary,
+                        unselectColor = MaterialTheme.colors.onSecondary
                     )
                 }
             ) {
@@ -133,12 +129,12 @@ fun resources(): Resources {
 }
 
 fun NavGraphBuilder.meditateggGraph(appState: MeditateGGAppState) {
-    composable(MEDITATION_MAP_SCREEN) {
+    composable(MAP_SCREEN) {
         appState.showBottomBar()
-        MeditationMap(navController = appState.navController)
+        MapScreen(navController = appState.navController)
     }
     composable(JOURNAL_SCREEN) {
-        Journal()
+        JournalScreen()
     }
     composable(SETTINGS_SCREEN) {
         SettingsScreen(
