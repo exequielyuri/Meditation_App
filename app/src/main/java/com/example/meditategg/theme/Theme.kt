@@ -24,7 +24,10 @@ private val LightColorPalette = lightColors(
     onSurface = Purple30, // dividers, axes
 
     background = Color.White,
-    onBackground = Purple45 // bars, nodes
+    onBackground = Purple45, // bars, nodes
+
+    error = Color.LightGray,
+    onError = Color.Black
 )
 
 @Composable
