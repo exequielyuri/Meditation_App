@@ -1,6 +1,4 @@
-package com.example.meditategg.screens.meditation
-
-import com.example.meditategg.model.Instruction
+package com.example.meditategg.model
 
 sealed class Meditation(
     val name: String,

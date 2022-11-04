@@ -15,9 +15,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import com.example.meditategg.MAP_SCREEN
-import com.example.meditategg.R
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.meditategg.R.drawable as AppIcon
 import com.example.meditategg.common.composable.ExpandableCard
 import com.example.meditategg.common.composable.GradientButton
 import com.example.meditategg.common.composable.MeditationCompletionDialog
@@ -29,41 +28,57 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun MeditationScreen(
+    modifier: Modifier = Modifier,
     meditation: Meditation,
-    navController: NavHostController,
-    backgroundGradient: Brush = Brush.verticalGradient(
-        listOf(
-            MaterialTheme.colors.background,
-            MaterialTheme.colors.surface
-        )
-    )
+    popUpScreen: () -> Unit,
+    viewModel: MeditationViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState
+    viewModel.initNewEntry(meditation.name)
+
+    LaunchedEffect(key1 = uiState.durationSec, key2 = uiState.meditating) {
+        if(uiState.meditating) {
+            delay(1.seconds)
+            viewModel.incrementTimer()
+        }
+    }
+
+    if (uiState.openDialog) {
+        MeditationCompletionDialog(
+            userReflection = uiState.userReflection,
+            durationSec = viewModel.entry.value.durationSec,
+            onReflectionChange = viewModel::onReflectionChange,
+            onConfirmClick = viewModel::onConfirmClick,
+            onRetry = viewModel::onRetry
+        )
+    }
+
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .background(brush = backgroundGradient),
+            .background(
+                brush = Brush.verticalGradient(
+                    listOf(
+                        MaterialTheme.colors.background,
+                        MaterialTheme.colors.surface
+                    )
+                )
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        val openDialog = remember { mutableStateOf(false) }
-
-        if (openDialog.value) {
-            MeditationCompletionDialog(openDialog = openDialog)
-        }
-
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(top = 25.dp)
                 .padding(horizontal = 25.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            IconButton(onClick = {
-                navController.navigate(MAP_SCREEN)
-            }) {
+            IconButton(onClick = popUpScreen) {
                 Icon(
-                    painter = painterResource(R.drawable.arrow_back),
+                    painter = painterResource(AppIcon.arrow_left),
+                    modifier = Modifier.size(24.dp),
                     contentDescription = "Back",
                     tint = MaterialTheme.colors.primary
                 )
@@ -71,13 +86,13 @@ fun MeditationScreen(
 
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_info),
+                    painter = painterResource(AppIcon.ic_info),
+                    modifier = Modifier.size(28.dp),
                     contentDescription = "More Info",
                     tint = MaterialTheme.colors.primary
                 )
             }
         }
-
 
         Text(
             text = meditation.name,
@@ -94,58 +109,45 @@ fun MeditationScreen(
             )
         )
 
-        Spacer(
-            modifier = Modifier
-                .height(15.dp)
-        )
+        Spacer(modifier = modifier.height(15.dp))
 
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LazyColumn(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .weight(5f)
                     .padding(horizontal = 30.dp)
-            ) { items(
-                items = meditation.instructions,
-                itemContent = { item ->
-                    Spacer(
-                        modifier = Modifier
-                            .height(2.dp)
-                    )
+            ) {
+                item { Spacer(modifier = modifier.height(20.dp)) }
+
+                items(items = meditation.instructions) { item ->
+                    Spacer(modifier = modifier.height(2.dp))
                     ExpandableCard(instruction = item)
-                })
+                }
+
+               item { Spacer(modifier = modifier.height(20.dp)) }
             }
 
             Box(
-                modifier = Modifier.weight(1f),
+                modifier = modifier.weight(1f),
                 contentAlignment = Alignment.Center
             ){
-                var counting by remember { mutableStateOf(false) }
-                var seconds by remember { mutableStateOf(0) }
-
-                LaunchedEffect(key1 = seconds, key2 = counting) {
-                    if(counting) {
-                        delay(1.seconds)
-                        seconds++
-                    }
-                }
-
+                val df = DecimalFormat("00")
                 GradientButton(
-                    text = if (counting) {
-                            val df = DecimalFormat("00")
-                            "${df.format(seconds/60)}:${df.format(seconds%60)}"
-                        } else { "Meditate" },
+                    text = if (uiState.meditating) {
+                            "${df.format(uiState.durationSec/60)}:${df.format(uiState.durationSec%60)}"
+                        } else "Meditate",
                     textColor = MaterialTheme.colors.onPrimary,
                     fontSize = 18.sp,
                     fontFamily = Lora,
                     fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.h4.copy(
                         shadow = Shadow(
-                            color = MaterialTheme.colors.surface,
+                            color = MaterialTheme.colors.primary,
                             offset = Offset(0f, 1f),
                             blurRadius = 1f
                         )
@@ -157,19 +159,14 @@ fun MeditationScreen(
                         )
                     ),
                     elevation = ButtonDefaults.elevation(
-                        defaultElevation = 5.dp,
+                        defaultElevation = 4.dp,
                         pressedElevation = 0.dp
                     ),
                     horizontalPad = 30.dp,
                     verticalPad = 10.dp,
                     onClick = {
-                        if (counting) {
-                            // record timer value
-                            // open journal prompt
-                            openDialog.value = true
-                            seconds = 0
-                        }
-                        counting = !counting
+                        if (uiState.meditating) { viewModel.onMeditationDone() }
+                        viewModel.toggleTimer()
                     }
                 )
             }
