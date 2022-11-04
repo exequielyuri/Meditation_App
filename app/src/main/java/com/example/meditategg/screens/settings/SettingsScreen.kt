@@ -175,7 +175,7 @@ fun SettingsScreen(
         )
 
         Spacer(modifier = Modifier.height(10.dp))
-        
+
         SettingsCard(
             text = "Favorite Meditations",
             leadingIcon = AppIcon.ic_heart,
