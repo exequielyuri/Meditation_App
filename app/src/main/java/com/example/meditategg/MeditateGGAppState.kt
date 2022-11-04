@@ -17,6 +17,7 @@ class MeditateGGAppState(
     val navController: NavHostController,
     val systemUiController: SystemUiController,
     val bottomBarVisible: MutableState<Boolean>,
+    val currentScreen: MutableState<String>,
     private val snackbarManager: SnackbarManager,
     private val resources: Resources,
     coroutineScope: CoroutineScope
@@ -30,12 +31,29 @@ class MeditateGGAppState(
         }
     }
 
-    fun showBottomBar() {
-        bottomBarVisible.value = true
+    fun changeRoute(route: String) {
+        currentScreen.value = route
+        when (route) {
+            MAP_SCREEN -> showBottomBar()
+            JOURNAL_SCREEN -> showBottomBar()
+            SETTINGS_SCREEN -> showBottomBar()
+            else -> hideBottomBar()
+        }
     }
 
-    fun hideBottomBar() {
-        bottomBarVisible.value = false
+    fun onMapNavigate() {
+        if (currentScreen.value == JOURNAL_SCREEN) navigateAndPopUp(MAP_SCREEN, JOURNAL_SCREEN)
+        else navigateAndPopUp(MAP_SCREEN, SETTINGS_SCREEN)
+    }
+
+    fun onJournalNavigate() {
+        if (currentScreen.value == SETTINGS_SCREEN) navigateAndPopUp(JOURNAL_SCREEN, SETTINGS_SCREEN)
+        else navigateAndPopUp(JOURNAL_SCREEN, MAP_SCREEN)
+    }
+
+    fun onSettingsNavigate() {
+        if (currentScreen.value == JOURNAL_SCREEN) navigateAndPopUp(SETTINGS_SCREEN, JOURNAL_SCREEN)
+        else navigateAndPopUp(SETTINGS_SCREEN, MAP_SCREEN)
     }
 
     fun changeSystemUiColor(color: Color) {
@@ -65,4 +83,7 @@ class MeditateGGAppState(
             popUpTo(0) { inclusive = true }
         }
     }
+
+    private fun showBottomBar() { bottomBarVisible.value = true }
+    private fun hideBottomBar() { bottomBarVisible.value = false }
 }

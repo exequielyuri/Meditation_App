@@ -13,14 +13,10 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.meditategg.common.composable.BottomNavigationBar
 import com.example.meditategg.common.snackbar.SnackbarManager
 import com.example.meditategg.screens.login.LoginScreen
@@ -44,7 +40,6 @@ fun MeditateGGApp() {
         Surface(color = MaterialTheme.colors.background) {
 
             val appState = rememberAppState()
-
             appState.changeSystemUiColor(MaterialTheme.colors.primary)
 
             Scaffold(
@@ -52,26 +47,24 @@ fun MeditateGGApp() {
                 snackbarHost = {
                     SnackbarHost(
                         hostState = it,
-                        modifier = Modifier.padding(8.dp),
+                        modifier = Modifier.padding(10.dp),
                         snackbar = { snackbarData ->
                             Snackbar(
                                 snackbarData,
-                                contentColor = MaterialTheme.colors.onPrimary
+                                contentColor = MaterialTheme.colors.onPrimary,
+                                backgroundColor = MaterialTheme.colors.primary
                             )
                         }
                     )
                 },
                 floatingActionButton = {
-                    val backStackEntry = appState.navController.currentBackStackEntryAsState()
-                    val mapSelected = MAP_SCREEN == backStackEntry.value?.destination?.route
-
                     AnimatedVisibility(
                         visible = appState.bottomBarVisible.value,
                         enter = slideInVertically(initialOffsetY = {it}),
                         exit = slideOutVertically(targetOffsetY = {it})
                     ) {
                         FloatingActionButton(
-                            onClick = { appState.clearAndNavigate(MAP_SCREEN)},
+                            onClick = appState::onMapNavigate,
                             modifier = Modifier
                                 .width(65.dp)
                                 .height(73.dp),
@@ -82,7 +75,7 @@ fun MeditateGGApp() {
                                 modifier = Modifier.padding(17.dp),
                                 painter = painterResource(R.drawable.ic_lotus),
                                 contentDescription = null,
-                                tint = if (mapSelected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSecondary
+                                tint = if (appState.currentScreen.value == MAP_SCREEN) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSecondary
                             )
                         }
                     }
@@ -91,11 +84,11 @@ fun MeditateGGApp() {
                 isFloatingActionButtonDocked = true,
                 bottomBar = {
                     BottomNavigationBar(
-                        navController = appState.navController,
                         isVisible = appState.bottomBarVisible,
-                        selectColor = MaterialTheme.colors.onPrimary,
-                        uiColor = MaterialTheme.colors.primary,
-                        unselectColor = MaterialTheme.colors.onSecondary
+                        journalSelected = appState.currentScreen.value == JOURNAL_SCREEN,
+                        settingsSelected = appState.currentScreen.value == SETTINGS_SCREEN,
+                        onJournalNavigate = appState::onJournalNavigate,
+                        onSettingsNavigate = appState::onSettingsNavigate
                     )
                 }
             ) {
@@ -114,11 +107,12 @@ fun rememberAppState(
     navController: NavHostController = rememberNavController(),
     systemUiController: SystemUiController = rememberSystemUiController(),
     bottomBarVisible: MutableState<Boolean> = remember { mutableStateOf(false) },
+    currentScreen: MutableState<String> = remember { mutableStateOf(MAP_SCREEN) },
     snackbarManager: SnackbarManager = SnackbarManager,
     resources: Resources = resources(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-) = remember(scaffoldState, navController, snackbarManager, resources, coroutineScope) {
-    MeditateGGAppState(scaffoldState, navController, systemUiController, bottomBarVisible, snackbarManager, resources, coroutineScope)
+) = remember(scaffoldState, navController, systemUiController, bottomBarVisible, currentScreen, snackbarManager, resources, coroutineScope) {
+    MeditateGGAppState(scaffoldState, navController, systemUiController, bottomBarVisible, currentScreen, snackbarManager, resources, coroutineScope)
 }
 
 @Composable
@@ -130,36 +124,43 @@ fun resources(): Resources {
 
 fun NavGraphBuilder.meditateggGraph(appState: MeditateGGAppState) {
     composable(MAP_SCREEN) {
-        appState.showBottomBar()
-        MapScreen(navController = appState.navController)
+        appState.changeRoute(MAP_SCREEN)
+        MapScreen(openScreen = { route -> appState.navigate(route) })
     }
     composable(JOURNAL_SCREEN) {
+        appState.changeRoute(JOURNAL_SCREEN)
         JournalScreen()
     }
     composable(SETTINGS_SCREEN) {
+        appState.changeRoute(SETTINGS_SCREEN)
         SettingsScreen(
             restartApp = { route -> appState.clearAndNavigate(route) },
             openScreen = { route -> appState.navigate(route) }
         )
     }
     composable(LOGIN_SCREEN) {
-        appState.hideBottomBar()
-        LoginScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+        appState.changeRoute(LOGIN_SCREEN)
+        LoginScreen(
+            openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) },
+            popUpScreen = appState::popUp
+        )
     }
     composable(SIGN_UP_SCREEN) {
-        appState.hideBottomBar()
-        SignUpScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+        appState.changeRoute(SIGN_UP_SCREEN)
+        SignUpScreen(
+            openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) },
+            popUpScreen = appState::popUp
+        )
     }
     composable(SPLASH_SCREEN) {
-        appState.hideBottomBar()
+        appState.changeRoute(SPLASH_SCREEN)
         SplashScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
     }
     composable(
         route = "$MEDITATION_SCREEN$MEDITATION_NAME_ARG",
         arguments = listOf(navArgument(MEDITATION_NAME) { type = NavType.StringType })
     ) { entry ->
-        appState.hideBottomBar()
-
+        appState.changeRoute(MEDITATION_SCREEN)
         val meditation = when(entry.arguments?.getString(MEDITATION_NAME)) {
             "Posture" -> Meditation.Posture
             "Trataka" -> Meditation.Trataka
@@ -171,7 +172,7 @@ fun NavGraphBuilder.meditateggGraph(appState: MeditateGGAppState) {
         }
         MeditationScreen(
             meditation = meditation,
-            navController = appState.navController
+            popUpScreen = appState::popUp
         )
     }
 }

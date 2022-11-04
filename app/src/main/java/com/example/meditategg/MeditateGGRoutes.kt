@@ -1,6 +1,6 @@
 package com.example.meditategg
 
-const val MEDITATION_MAP_SCREEN = "MeditationMapScreen"
+const val MAP_SCREEN = "MapScreen"
 const val JOURNAL_SCREEN = "JournalScreen"
 const val SETTINGS_SCREEN = "SettingsScreen"
 const val MEDITATION_SCREEN = "MeditationScreen"
