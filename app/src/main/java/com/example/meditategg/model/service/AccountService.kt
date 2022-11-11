@@ -1,5 +1,7 @@
 package com.example.meditategg.model.service
 
+import android.content.Context
+
 interface AccountService {
     fun hasUser(): Boolean
     fun isAnonymousUser(): Boolean
@@ -10,4 +12,6 @@ interface AccountService {
     fun linkAccount(email: String, password: String, onResult: (Throwable?) -> Unit)
     fun deleteAccount(onResult: (Throwable?) -> Unit)
     fun signOut()
+
+    fun onGoogleSignIn(context: Context)
 }

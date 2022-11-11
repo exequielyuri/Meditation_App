@@ -1,6 +1,10 @@
 package com.example.meditategg.model.service.impl
 
+import android.content.Context
 import com.example.meditategg.model.service.AccountService
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -48,5 +52,30 @@ class AccountServiceImpl @Inject constructor() : AccountService {
 
     override fun signOut() {
         Firebase.auth.signOut()
+    }
+
+    private lateinit var oneTapClient: SignInClient
+    private lateinit var signInRequest: BeginSignInRequest
+    private val webClientId = "209751399752-4s0q4uo4jhfqu1arqiqtvi7iqcipbcd8.apps.googleusercontent.com"
+
+    override fun onGoogleSignIn(context: Context) {
+
+        oneTapClient = Identity.getSignInClient(context)
+        signInRequest = BeginSignInRequest.builder()
+            .setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder()
+                .setSupported(true)
+                .build())
+            .setGoogleIdTokenRequestOptions(
+                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                    .setSupported(true)
+                    // Your server's client ID, not your Android client ID.
+                    .setServerClientId(webClientId)
+                    // Only show accounts previously used to sign in.
+                    .setFilterByAuthorizedAccounts(true)
+                    .build())
+            // Automatically sign in when exactly one credential is retrieved.
+            .setAutoSelectEnabled(true)
+            .build()
+
     }
 }

@@ -203,7 +203,7 @@ fun PageCard(
                     fontSize = 16.sp,
                     fontFamily = Lora,
                     fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colors.secondary,
+                    color = MaterialTheme.colors.primaryVariant,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2
                 )
