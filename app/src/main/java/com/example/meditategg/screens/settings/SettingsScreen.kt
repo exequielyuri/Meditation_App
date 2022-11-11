@@ -57,41 +57,67 @@ fun SettingsScreen(
     ) {
 
         Spacer(modifier = Modifier.padding(18.dp))
+        if (uiState.isAnonymousAccount) {
+            Image(
+                painter = painterResource(AppIcon.anonymous_profile_pink),
+                contentDescription = "Profile picture",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .height(200.dp)
+            )
 
-        Image(
-            painter = painterResource(AppIcon.sample_profile),
-            contentDescription = "Profile picture",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(150.dp)
-                .clip(CircleShape)
-                .border(
-                    3.dp,
-                    MaterialTheme.colors.primary,
-                    CircleShape
-                )
-                .shadow(
-                    elevation = 4.dp,
-                    clip = true
-                )
-        )
+            Spacer(modifier = Modifier.height(5.dp))
 
-        Spacer(modifier = Modifier.height(5.dp))
-
-        Text(
-            text = "Sasha Braus",
-            color = MaterialTheme.colors.primary,
-            fontSize = 20.sp,
-            fontFamily = Lora,
-            fontWeight = FontWeight.SemiBold,
-            style = MaterialTheme.typography.h4.copy(
-                shadow = Shadow(
-                    color = MaterialTheme.colors.secondaryVariant,
-                    offset = Offset(0f, 3f),
-                    blurRadius = 5f
+            Text(
+                text = "Guest",
+                color = MaterialTheme.colors.primary,
+                fontSize = 20.sp,
+                fontFamily = Lora,
+                fontWeight = FontWeight.SemiBold,
+                style = MaterialTheme.typography.h4.copy(
+                    shadow = Shadow(
+                        color = MaterialTheme.colors.secondaryVariant,
+                        offset = Offset(0f, 3f),
+                        blurRadius = 5f
+                    )
                 )
             )
-        )
+        } else {
+            Image(
+                painter = painterResource(AppIcon.sample_profile),
+                contentDescription = "Profile picture",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(150.dp)
+                    .clip(CircleShape)
+                    .border(
+                        5.dp,
+                        MaterialTheme.colors.primary,
+                        CircleShape
+                    )
+                    .shadow(
+                        elevation = 4.dp,
+                        clip = true
+                    )
+            )
+
+            Spacer(modifier = Modifier.height(5.dp))
+
+            Text(
+                text = "Exequiel Garcia", /*TODO: get user name*/
+                color = MaterialTheme.colors.primary,
+                fontSize = 20.sp,
+                fontFamily = Lora,
+                fontWeight = FontWeight.SemiBold,
+                style = MaterialTheme.typography.h4.copy(
+                    shadow = Shadow(
+                        color = MaterialTheme.colors.secondaryVariant,
+                        offset = Offset(0f, 3f),
+                        blurRadius = 5f
+                    )
+                )
+            )
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -253,14 +279,51 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        Text(
+            text = "Account",
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(start = 20.dp),
+            color = MaterialTheme.colors.primary,
+            fontSize = 20.sp,
+            fontFamily = Lora,
+            fontWeight = FontWeight.Medium
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
         if (uiState.isAnonymousAccount) {
-            RegularCardEditor(AppText.sign_in, AppIcon.ic_sign_in, "", Modifier.padding(16.dp, 0.dp, 16.dp, 8.dp)) {
-                viewModel.onLoginClick(openScreen)
+
+            SettingsCard(
+                text = stringResource(AppText.sign_in),
+                leadingIcon = AppIcon.ic_sign_in,
+                onClick = { viewModel.onLoginClick(openScreen) }
+            ) {
+                IconButton(onClick = { viewModel.onLoginClick(openScreen) }) {
+                    Icon(
+                        painter = painterResource(AppIcon.arrow_right),
+                        modifier = Modifier.size(20.dp),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primary
+                    )
+                }
             }
 
-            RegularCardEditor(AppText.create_account, AppIcon.ic_create_account, "", Modifier.padding(16.dp, 0.dp, 16.dp, 8.dp)) {
-                viewModel.onSignUpClick(openScreen)
+            SettingsCard(
+                text = stringResource(AppText.create_account),
+                leadingIcon = AppIcon.ic_create_account,
+                onClick = { viewModel.onSignUpClick(openScreen) }
+            ) {
+                IconButton(onClick = { viewModel.onSignUpClick(openScreen) }) {
+                    Icon(
+                        painter = painterResource(AppIcon.arrow_right),
+                        modifier = Modifier.size(20.dp),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primary
+                    )
+                }
             }
+
         } else {
             SignOutCard { viewModel.onSignOutClick(restartApp) }
             DeleteMyAccountCard { /*TODO: onDeleteMyAccount*/ }
@@ -275,22 +338,84 @@ fun SettingsScreen(
 private fun SignOutCard(signOut: () -> Unit) {
     var showWarningDialog by remember { mutableStateOf(false) }
 
-    RegularCardEditor(AppText.sign_out, AppIcon.ic_exit, "", Modifier.padding(16.dp, 0.dp, 16.dp, 8.dp)) {
-        showWarningDialog = true
+    SettingsCard(
+        text = stringResource(AppText.sign_out),
+        leadingIcon = AppIcon.ic_exit,
+        onClick = { showWarningDialog = true }
+    ) {
+        IconButton(onClick = { showWarningDialog = true }) {
+            Icon(
+                painter = painterResource(AppIcon.arrow_right),
+                modifier = Modifier.size(20.dp),
+                contentDescription = null,
+                tint = MaterialTheme.colors.primary
+            )
+        }
     }
 
     if(showWarningDialog) {
         AlertDialog(
-            title = { Text(stringResource(AppText.sign_out_title)) },
-            text = { Text(stringResource(AppText.sign_out_description)) },
-            dismissButton = { DialogCancelButton(AppText.cancel) { showWarningDialog = false } },
-            confirmButton = {
-                DialogConfirmButton(AppText.sign_out) {
-                    signOut()
-                    showWarningDialog = false
+            title = {
+                Text(
+                    text = stringResource(AppText.sign_out_title),
+                    color = MaterialTheme.colors.primary
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(AppText.sign_out_description),
+                    color = MaterialTheme.colors.primaryVariant
+                )
+            },
+            dismissButton = {
+                Button(
+                    onClick = { showWarningDialog = false },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 5.dp,
+                        pressedElevation = 0.dp
+                    )
+                ) {
+                    Text(
+                        text = stringResource(AppText.cancel),
+                        fontSize = 15.sp,
+                        style = MaterialTheme.typography.h4.copy(
+                            shadow = Shadow(
+                                color = MaterialTheme.colors.primary,
+                                offset = Offset(0f, 1f),
+                                blurRadius = 1f
+                            )
+                        )
+                    )
                 }
             },
-            onDismissRequest = { showWarningDialog = false }
+            confirmButton = {
+                Button(
+                    onClick = {
+                        signOut()
+                        showWarningDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 5.dp,
+                        pressedElevation = 0.dp
+                    )
+                ) {
+                    Text(
+                        text = stringResource(AppText.sign_out),
+                        fontSize = 15.sp,
+                        style = MaterialTheme.typography.h4.copy(
+                            shadow = Shadow(
+                                color = MaterialTheme.colors.surface,
+                                offset = Offset(0f, 1f),
+                                blurRadius = 1f
+                            )
+                        )
+                    )
+                }
+            },
+            onDismissRequest = { showWarningDialog = false },
+            backgroundColor = MaterialTheme.colors.background
         )
     }
 }
@@ -300,48 +425,86 @@ private fun SignOutCard(signOut: () -> Unit) {
 private fun DeleteMyAccountCard(deleteMyAccount: () -> Unit) {
     var showWarningDialog by remember { mutableStateOf(false) }
 
-    DangerousCardEditor(AppText.delete_my_account, AppIcon.ic_delete_my_account, "", Modifier.padding(16.dp, 0.dp, 16.dp, 8.dp)) {
-        showWarningDialog = true
+    SettingsCard(
+        text = stringResource(AppText.delete_my_account),
+        leadingIcon = AppIcon.ic_delete_my_account,
+        onClick = { showWarningDialog = true }
+    ) {
+        IconButton(onClick = { showWarningDialog = true }) {
+            Icon(
+                painter = painterResource(AppIcon.arrow_right),
+                modifier = Modifier.size(20.dp),
+                contentDescription = null,
+                tint = MaterialTheme.colors.primary
+            )
+        }
     }
 
     if(showWarningDialog) {
         AlertDialog(
-            title = { Text(stringResource(AppText.delete_account_title)) },
-            text = { Text(stringResource(AppText.delete_account_description)) },
-            dismissButton = { DialogCancelButton(AppText.cancel) { showWarningDialog = false } },
-            confirmButton = {
-                DialogConfirmButton(AppText.delete_my_account) {
-                    deleteMyAccount()
-                    showWarningDialog = false
+            title = {
+                Text(
+                    text = stringResource(AppText.delete_account_title),
+                    color = MaterialTheme.colors.primary
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(AppText.delete_account_description),
+                    color = MaterialTheme.colors.primary
+                )
+            },
+            dismissButton = {
+                Button(
+                    onClick = { showWarningDialog = false },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.background),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 5.dp,
+                        pressedElevation = 0.dp
+                    )
+                ) {
+                    Text(
+                        text = stringResource(AppText.cancel),
+                        fontSize = 15.sp,
+                        style = MaterialTheme.typography.h4.copy(
+                            shadow = Shadow(
+                                color = MaterialTheme.colors.primary,
+                                offset = Offset(0f, 1f),
+                                blurRadius = 1f
+                            )
+                        )
+                    )
                 }
             },
-            onDismissRequest = { showWarningDialog = false }
+            confirmButton = {
+                Button(
+                    onClick = {
+                        deleteMyAccount()
+                        showWarningDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 5.dp,
+                        pressedElevation = 0.dp
+                    )
+                ) {
+                    Text(
+                        text = stringResource(AppText.delete_my_account),
+                        fontSize = 15.sp,
+                        style = MaterialTheme.typography.h4.copy(
+                            shadow = Shadow(
+                                color = MaterialTheme.colors.surface,
+                                offset = Offset(0f, 1f),
+                                blurRadius = 1f
+                            )
+                        )
+                    )
+                }
+            },
+            onDismissRequest = { showWarningDialog = false },
+            backgroundColor = MaterialTheme.colors.background
         )
     }
-}
-
-@ExperimentalMaterialApi
-@Composable
-fun DangerousCardEditor(
-    @StringRes title: Int,
-    @DrawableRes icon: Int,
-    content: String,
-    modifier: Modifier,
-    onEditClick: () -> Unit
-) {
-    CardEditor(title, icon, content, onEditClick, MaterialTheme.colors.primary, modifier)
-}
-
-@ExperimentalMaterialApi
-@Composable
-fun RegularCardEditor(
-    @StringRes title: Int,
-    @DrawableRes icon: Int,
-    content: String,
-    modifier: Modifier,
-    onEditClick: () -> Unit
-) {
-    CardEditor(title, icon, content, onEditClick, MaterialTheme.colors.onSurface, modifier)
 }
 
 @ExperimentalMaterialApi
@@ -375,31 +538,5 @@ private fun CardEditor(
                 tint = highlightColor
             )
         }
-    }
-}
-
-@Composable
-fun DialogConfirmButton(@StringRes text: Int, action: () -> Unit) {
-    Button(
-        onClick = action,
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.primary,
-            contentColor = MaterialTheme.colors.onPrimary
-        )
-    ) {
-        Text(text = stringResource(text))
-    }
-}
-
-@Composable
-fun DialogCancelButton(@StringRes text: Int, action: () -> Unit) {
-    Button(
-        onClick = action,
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.onPrimary,
-            contentColor = MaterialTheme.colors.primary
-        )
-    ) {
-        Text(text = stringResource(text))
     }
 }

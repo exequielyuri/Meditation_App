@@ -46,13 +46,55 @@ class StorageServiceImpl @Inject constructor() : StorageService {
         listenerRegistration?.remove()
     }
 
-    override fun saveEntry(userId: String, entry: JournalEntry, onResult: (Throwable?) -> Unit) {
+    override fun saveEntry(
+        userId: String,
+        entry: JournalEntry,
+        onResult: (Throwable?) -> Unit
+    ) {
         Firebase.firestore
-            .collection(USER_COLLECTION).document(userId)
+            .collection(USER_COLLECTION)
+            .document(userId)
             .collection(ENTRY_COLLECTION)
-            .document(entry.timestamp.toString())
-            .set(entry)
-            .addOnCompleteListener { onResult(it.exception) }
+            .whereEqualTo("day", entry.day)
+            .whereEqualTo("month", entry.month)
+            .whereEqualTo("year", entry.year)
+            .get()
+            .addOnSuccessListener {
+                if (it.documents.isEmpty()) {
+                    Firebase.firestore
+                        .collection(USER_COLLECTION).document(userId)
+                        .collection(ENTRY_COLLECTION)
+                        .document(entry.timestamp.toString())
+                        .set(entry)
+                        .addOnCompleteListener { onResult(it.exception) }
+                } else {
+                    it.documents.forEach() {
+                        val oldEntry = it.toObject<JournalEntry>()!!
+                        val updatedEntry = oldEntry.copy(
+                            timestamp = entry.timestamp,
+                            meditationName = entry.meditationName,
+                            durationMin = oldEntry.durationMin + entry.durationMin,
+                            durationSec = oldEntry.durationSec + entry.durationSec,
+                            content = "${entry.content}\n\n> ${oldEntry.meditationName}\n${oldEntry.content}".trim()
+                        )
+                        deleteEntry(
+                            userId =  userId,
+                            timestamp = oldEntry.timestamp.toString(),
+                            onResult = onResult
+                        )
+                        Firebase.firestore
+                            .collection(USER_COLLECTION)
+                            .document(userId)
+                            .collection(ENTRY_COLLECTION)
+                            .document(updatedEntry.timestamp.toString())
+                            .set(updatedEntry)
+                            .addOnCompleteListener { onResult(it.exception) }
+                    }
+
+                }
+            }
+            .addOnFailureListener { error -> onResult(error) }
+
     }
 
     override fun updateEntry(userId: String, entry: JournalEntry, onResult: (Throwable?) -> Unit) {
