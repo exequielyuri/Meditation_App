@@ -73,23 +73,22 @@ fun JournalScreen(
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalAlignment = Alignment.Bottom
                     ) {
-                        if (entries.isNotEmpty()) {
-                            var latestDay = entries.first().dayOfWeek-1
-                            for (curr in latestDay downTo 0) {
+                        val weeklyEntries = viewModel.weeklyEntries
+                        if (weeklyEntries.isNotEmpty()) {
+                            println("entry size is " + weeklyEntries.size)
+                            weeklyEntries.forEach() { entry ->
+                                println("entry is " + entry)
                                 GraphBar(
                                     width = graphItemWidth,
-                                    totalDurationSec = entries.elementAt(curr).durationMin * 60 + entries.elementAt(curr).durationSec,
+                                    totalDurationSec = entry.durationMin * 60 + entry.durationSec,
                                     maxDurationSec = 1800,
                                     maxDp = 100,
                                     onBarClick = viewModel::onBarClick
                                 )
                             }
-                            latestDay++
-                            for (curr in latestDay..6) { GraphBar(width = graphItemWidth) }
                         }
                     }
                 }
-
 
                 Row(
                     modifier = modifier
@@ -119,7 +118,14 @@ fun JournalScreen(
             BottomShadow()
             LazyColumn(
                 modifier = modifier.fillMaxSize()
-            ) { items(items = entries, itemContent = { item -> PageCard(item, viewModel::onBookmarkClick) }) }
+            ) {
+                items(items = entries, itemContent = {
+                    item -> PageCard(item, viewModel::onBookmarkClick)
+                })
+                item{
+                    Spacer(modifier = Modifier.height(100.dp))
+                }
+            }
         }
     }
 

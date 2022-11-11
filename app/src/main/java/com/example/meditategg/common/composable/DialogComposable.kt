@@ -1,5 +1,6 @@
 package com.example.meditategg.common.composable
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -27,7 +29,7 @@ fun MeditationCompletionDialog(
     userReflection: String,
     durationSec: Int,
     onReflectionChange: (String) -> Unit,
-    onConfirmClick: () -> Unit,
+    onConfirmClick: (Context) -> Unit,
     onRetry: () -> Unit,
 ) {
     Dialog(onDismissRequest = onRetry) {
@@ -58,14 +60,14 @@ fun MeditationCompletionDialog(
                     onValueChange = { onReflectionChange(it) },
                     modifier = modifier.padding(start = 20.dp, end = 20.dp, bottom = 10.dp),
                     textStyle = TextStyle(
-                        color = MaterialTheme.colors.secondary,
+                        color = MaterialTheme.colors.primaryVariant,
                         fontSize = 15.sp,
                         fontFamily = Lora,
                     ),
                     label = {
                         Text(
                             text = "How was your experience?",
-                            color = MaterialTheme.colors.primary,
+                            color = MaterialTheme.colors.primaryVariant,
                             fontSize = 15.sp,
                             fontFamily = Lora
                         )
@@ -105,8 +107,9 @@ fun MeditationCompletionDialog(
 
                 Spacer(modifier = modifier.width(8.dp))
 
+                val context = LocalContext.current
                 Button(
-                    onClick = onConfirmClick,
+                    onClick = { onConfirmClick(context) },
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                     elevation = ButtonDefaults.elevation(
                         defaultElevation = 5.dp,
@@ -164,6 +167,7 @@ fun JournalDialog(
                     Icon(
                         painter = if (entry.bookmark) painterResource(AppIcon.ic_bookmark) else painterResource(AppIcon.ic_bookmark_border),
                         contentDescription = "Bookmark",
+                        modifier = Modifier.size(20.dp),
                         tint = MaterialTheme.colors.primary
                     )
                 }
@@ -178,7 +182,7 @@ fun JournalDialog(
                     item {
                         Text(
                             text = entry.content,
-                            color = MaterialTheme.colors.secondary,
+                            color = MaterialTheme.colors.primaryVariant,
                             fontSize = 16.sp,
                             fontFamily = Lora
                         )
