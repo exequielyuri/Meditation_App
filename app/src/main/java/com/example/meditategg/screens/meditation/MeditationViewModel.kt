@@ -1,9 +1,9 @@
 package com.example.meditategg.screens.meditation
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.example.meditategg.R.string as AppText
-import com.example.meditategg.common.snackbar.SnackbarManager
 import com.example.meditategg.model.JournalEntry
 import com.example.meditategg.model.service.AccountService
 import com.example.meditategg.model.service.LogService
@@ -42,10 +42,6 @@ class MeditationViewModel @Inject constructor(
         uiState.value = uiState.value.copy(meditating = !meditating)
     }
 
-    fun toggleDialog() {
-        uiState.value = uiState.value.copy(openDialog = !openDialog)
-    }
-
     fun onMeditationDone() {
         toggleDialog()
         entry.value = entry.value.copy(
@@ -60,11 +56,12 @@ class MeditationViewModel @Inject constructor(
         resetInputs()
     }
 
-    fun onConfirmClick() {
+    fun onConfirmClick(context: Context) {
         toggleDialog()
+        Toast.makeText(context, "Entry has been saved.", Toast.LENGTH_SHORT).show()
         entry.value = entry.value.copy(
             timestamp = Timestamp.now(),
-            content = userReflection
+            content = userReflection.trim()
         )
         viewModelScope.launch(showErrorExceptionHandler) {
             val saveEntryTrace = Firebase.performance.newTrace(SAVE_ENTRY_TRACE)
@@ -73,7 +70,7 @@ class MeditationViewModel @Inject constructor(
             storageService.saveEntry(accountService.getUserId(), entry.value) { error ->
                 saveEntryTrace.stop()
                 if (error == null) {
-                    SnackbarManager.showMessage(AppText.sync_success)
+                    //SnackbarManager.showMessage(AppText.sync_success)
                 } else onError(error)
             }
         }
@@ -101,6 +98,10 @@ class MeditationViewModel @Inject constructor(
             durationSec = 0,
             userReflection = ""
         )
+    }
+
+    private fun toggleDialog() {
+        uiState.value = uiState.value.copy(openDialog = !openDialog)
     }
 
     companion object {

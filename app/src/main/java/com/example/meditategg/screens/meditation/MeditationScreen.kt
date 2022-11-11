@@ -140,7 +140,7 @@ fun MeditationScreen(
                 GradientButton(
                     text = if (uiState.meditating) {
                             "${df.format(uiState.durationSec/60)}:${df.format(uiState.durationSec%60)}"
-                        } else "Meditate",
+                        } else "Practice",
                     textColor = MaterialTheme.colors.onPrimary,
                     fontSize = 18.sp,
                     fontFamily = Lora,
