@@ -24,6 +24,7 @@ import com.example.meditategg.model.Meditation
 import com.example.meditategg.screens.journal.JournalScreen
 import com.example.meditategg.screens.map.MapScreen
 import com.example.meditategg.screens.meditation.MeditationScreen
+import com.example.meditategg.screens.onboarding.OnBoardingScreen
 import com.example.meditategg.screens.settings.SettingsScreen
 import com.example.meditategg.screens.sign_up.SignUpScreen
 import com.example.meditategg.screens.splash.SplashScreen
@@ -123,6 +124,10 @@ fun resources(): Resources {
 }
 
 fun NavGraphBuilder.meditateggGraph(appState: MeditateGGAppState) {
+    composable(ONBOARDING_SCREEN) {
+        appState.changeRoute(ONBOARDING_SCREEN)
+        OnBoardingScreen(openAndPopup = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+    }
     composable(MAP_SCREEN) {
         appState.changeRoute(MAP_SCREEN)
         MapScreen(openScreen = { route -> appState.navigate(route) })
