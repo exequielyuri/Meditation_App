@@ -52,7 +52,7 @@ fun MapScreen(
             }
     ) {
         Image(
-            painter = painterResource(R.drawable.meditation_graph_gradient),
+            painter = painterResource(R.drawable.meditation_graph_gradient_labels),
             contentDescription = null,
             modifier = modifier.requiredSize(uiState.mapSize)
         )
@@ -61,11 +61,11 @@ fun MapScreen(
             modifier = modifier.requiredSize(uiState.mapSize)
         ) {
             MeditationNode(Meditation.Posture.name, viewModel::onNodeClick, openScreen)
-            MeditationNode(Meditation.Ice.name, viewModel::onNodeClick, openScreen)
-            MeditationNode(Meditation.Trataka.name, viewModel::onNodeClick, openScreen)
-            MeditationNode(Meditation.BeesBreath.name, viewModel::onNodeClick, openScreen)
-            MeditationNode(Meditation.Mindfulness.name, viewModel::onNodeClick, openScreen)
-            MeditationNode(Meditation.ThirdEye.name, viewModel::onNodeClick, openScreen)
+            MeditationNode(Meditation.RotatingAwareness.name, viewModel::onNodeClick, openScreen)
+            MeditationNode(Meditation.Kapalbhati.name, viewModel::onNodeClick, openScreen)
+            MeditationNode(Meditation.WhatIsSelf.name, viewModel::onNodeClick, openScreen)
+            MeditationNode(Meditation.FollowingBreath.name, viewModel::onNodeClick, openScreen)
+            MeditationNode(Meditation.RewindPractice.name, viewModel::onNodeClick, openScreen)
         }
     }
 }

@@ -167,12 +167,12 @@ fun NavGraphBuilder.meditateggGraph(appState: MeditateGGAppState) {
     ) { entry ->
         appState.changeRoute(MEDITATION_SCREEN)
         val meditation = when(entry.arguments?.getString(MEDITATION_NAME)) {
-            "Posture" -> Meditation.Posture
-            "Trataka" -> Meditation.Trataka
-            "Bee's Breath" -> Meditation.BeesBreath
-            "Mindfulness" -> Meditation.Mindfulness
-            "Ice" -> Meditation.Ice
-            "Third Eye" -> Meditation.ThirdEye
+            Meditation.Posture.name -> Meditation.Posture
+            Meditation.RotatingAwareness.name -> Meditation.RotatingAwareness
+            Meditation.Kapalbhati.name -> Meditation.Kapalbhati
+            Meditation.WhatIsSelf.name -> Meditation.WhatIsSelf
+            Meditation.FollowingBreath.name -> Meditation.FollowingBreath
+            Meditation.RewindPractice.name -> Meditation.RewindPractice
             else -> Meditation.Custom
         }
         MeditationScreen(
