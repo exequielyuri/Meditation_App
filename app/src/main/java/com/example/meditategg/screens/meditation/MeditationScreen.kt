@@ -94,10 +94,12 @@ fun MeditationScreen(
             }
         }
 
+        Spacer(modifier = modifier.height(5.dp))
+
         Text(
             text = meditation.name,
             color = MaterialTheme.colors.primary,
-            fontSize = 36.sp,
+            fontSize = 28.sp,
             fontFamily = Lora,
             fontWeight = FontWeight.SemiBold,
             style = MaterialTheme.typography.h4.copy(

@@ -173,6 +173,8 @@ fun NavGraphBuilder.meditateggGraph(appState: MeditateGGAppState) {
             Meditation.WhatIsSelf.name -> Meditation.WhatIsSelf
             Meditation.FollowingBreath.name -> Meditation.FollowingBreath
             Meditation.RewindPractice.name -> Meditation.RewindPractice
+            Meditation.OmChanting.name -> Meditation.OmChanting
+            Meditation.FacultyOfHearing.name -> Meditation.FacultyOfHearing
             else -> Meditation.Custom
         }
         MeditationScreen(

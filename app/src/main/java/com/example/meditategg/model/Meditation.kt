@@ -37,7 +37,7 @@ sealed class Meditation(
         name = "Rotating Awareness",
         instructions = listOf(
             Instruction(
-                "Find noisy environment",
+                "Find a noisy environment",
                 "Go to a crowded place with varied sounds - like a cafeteria or a shopping center, or park. The goal in this meditation is to calm a very active mind, and can be used as a preparation for other practices."
             ),
             Instruction(
@@ -82,7 +82,7 @@ sealed class Meditation(
     )
 
     object WhatIsSelf : Meditation(
-        name = "What is Self?",
+        name = "What is Self",
         instructions = listOf(
             Instruction(
                 "Meditated State",
@@ -151,6 +151,50 @@ sealed class Meditation(
             Instruction(
                 "Find the sweet spot",
                 "If you count very fast, the practice won't be boring, and won't help you sleep; but if you count very slowly your mind will end up wandering. The timing would vary from person to person, but you can start by counting down after 5 seconds and then make adjustments from there. So what happens now if you were able to count down until the last number and you're still awake? Then you're probably doing the practice wrong (haha), and may need to try again (sorry)."
+            )
+        )
+    )
+
+    object OmChanting : Meditation(
+        name = "Om Chanting",
+        instructions = listOf(
+            Instruction(
+                "Take a deep breath",
+                "Start by sitting up straight and taking a deep breath in."
+            ),
+            Instruction(
+                "Chant Om",
+                "\"Om\" is composed of three syllables \"A - U - M\". Start with the first syllable \"A\" (aah), then transition to \"U\" (ooo), and end with \"M\" (mmh). Remember that chanting is about the creation of vibration, so adjust your pitch and volume to maximize the production of sound."
+            ),
+            Instruction(
+                "Notice the silence",
+                "The final phase of chanting is silence. After your breath, be silent for a few seconds before starting the next round."
+            ),
+            Instruction(
+                "Post-practice residue",
+                "As you complete the meditation, sit in the silence post-practice. Feel the residual sensations, energy, or peace left through chanting. Sitting in the silence can be done for up to 5 minutes (experienced meditators will do this for an hour or integrate a second practice afterward)."
+            )
+        )
+    )
+
+    object FacultyOfHearing : Meditation(
+        name = "Faculty of Hearing",
+        instructions = listOf(
+            Instruction(
+                "Meditated State",
+                "This is an advanced practice, and it is recommended that you already have 3 months of experience before attempting it. Moreover, before this practice, you should do something like a rotating sound awareness meditation."
+            ),
+            Instruction(
+                "Notice the sounds",
+                "Notice that YOU are hearing the sound. Notice that the sound is coming from outside of you, and the hearing process is happening inside you."
+            ),
+            Instruction(
+                "Faculty of hearing",
+                "Observe the capacity to hear. In that moment, notice that the process of hearing, instead of it being internal, it becomes something that is outside of you; that you are the observer of the hearing. Notice the effect of words on your mind or the sensation of hunger on mental craving. Notice that indriyas, er what we call sense organs, or sensations create reverberations on the mind."
+            ),
+            Instruction(
+                "Perturbations of the mind",
+                "Observe the perturbations of the mind. Who is doing the hearing? Who is noticing the faculty of hearing? Who is noticing the perturbations in your mind? As you practice, and your awareness becomes able to detect more subtle things, you will find answers to these questions."
             )
         )
     )
