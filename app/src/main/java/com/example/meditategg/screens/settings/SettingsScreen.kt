@@ -5,13 +5,10 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -59,65 +56,36 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.padding(18.dp))
         if (uiState.isAnonymousAccount) {
             Image(
-                painter = painterResource(AppIcon.anonymous_profile_pink),
+                painter = painterResource(AppIcon.reindeer),
                 contentDescription = "Profile picture",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .height(200.dp)
-            )
-
-            Spacer(modifier = Modifier.height(5.dp))
-
-            Text(
-                text = "Guest",
-                color = MaterialTheme.colors.primary,
-                fontSize = 20.sp,
-                fontFamily = Lora,
-                fontWeight = FontWeight.SemiBold,
-                style = MaterialTheme.typography.h4.copy(
-                    shadow = Shadow(
-                        color = MaterialTheme.colors.secondaryVariant,
-                        offset = Offset(0f, 3f),
-                        blurRadius = 5f
-                    )
-                )
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.height(150.dp)
             )
         } else {
             Image(
-                painter = painterResource(AppIcon.sample_profile),
+                painter = painterResource(AppIcon.anonymous_profile_pink),
                 contentDescription = "Profile picture",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(150.dp)
-                    .clip(CircleShape)
-                    .border(
-                        5.dp,
-                        MaterialTheme.colors.primary,
-                        CircleShape
-                    )
-                    .shadow(
-                        elevation = 4.dp,
-                        clip = true
-                    )
-            )
-
-            Spacer(modifier = Modifier.height(5.dp))
-
-            Text(
-                text = "Exequiel Garcia", /*TODO: get user name*/
-                color = MaterialTheme.colors.primary,
-                fontSize = 20.sp,
-                fontFamily = Lora,
-                fontWeight = FontWeight.SemiBold,
-                style = MaterialTheme.typography.h4.copy(
-                    shadow = Shadow(
-                        color = MaterialTheme.colors.secondaryVariant,
-                        offset = Offset(0f, 3f),
-                        blurRadius = 5f
-                    )
-                )
+                modifier = Modifier.height(150.dp)
             )
         }
+
+        Spacer(modifier = Modifier.height(5.dp))
+
+        Text(
+            text = uiState.name,
+            color = MaterialTheme.colors.primary,
+            fontSize = 20.sp,
+            fontFamily = Lora,
+            fontWeight = FontWeight.SemiBold,
+            style = MaterialTheme.typography.h4.copy(
+                shadow = Shadow(
+                    color = MaterialTheme.colors.secondaryVariant,
+                    offset = Offset(0f, 3f),
+                    blurRadius = 5f
+                )
+            )
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
 

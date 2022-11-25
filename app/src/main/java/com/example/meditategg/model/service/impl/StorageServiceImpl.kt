@@ -1,6 +1,7 @@
 package com.example.meditategg.model.service.impl
 
 import com.example.meditategg.model.JournalEntry
+import com.example.meditategg.model.User
 import com.example.meditategg.model.service.StorageService
 import com.google.firebase.firestore.DocumentChange.Type.*
 import com.google.firebase.firestore.ListenerRegistration
@@ -154,6 +155,34 @@ class StorageServiceImpl @Inject constructor() : StorageService {
                 val favoriteMeditations = result.get(FAVORITE_MEDITATIONS)
                 onSuccess(favoriteMeditations as List<String>)
             }
+    }
+
+    override fun getUser(
+        userId: String,
+        onError: (Throwable) -> Unit,
+        onSuccess: (User?) -> Unit
+    ) {
+        Firebase.firestore
+            .collection(USER_COLLECTION)
+            .document(userId)
+            .get()
+            .addOnFailureListener { error -> onError(error) }
+            .addOnSuccessListener { result ->
+                onSuccess(result.toObject<User>())
+            }
+    }
+
+
+
+    override fun addUser(
+        user: User,
+        onResult: (Throwable?) -> Unit
+    ) {
+        Firebase.firestore
+            .collection(USER_COLLECTION)
+            .document(user.id)
+            .set(user)
+            .addOnCompleteListener { onResult(it.exception) }
     }
 
     companion object {

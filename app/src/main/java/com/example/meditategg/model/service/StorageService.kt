@@ -1,6 +1,7 @@
 package com.example.meditategg.model.service
 
 import com.example.meditategg.model.JournalEntry
+import com.example.meditategg.model.User
 
 interface StorageService {
     fun addJournalListener(
@@ -34,5 +35,14 @@ interface StorageService {
         userId: String,
         onError: (Throwable?) -> Unit,
         onSuccess: (List<String>) -> Unit
+    )
+    fun getUser(
+        userId: String,
+        onError: (Throwable) -> Unit,
+        onSuccess: (User?) -> Unit
+    )
+    fun addUser(
+        user: User,
+        onResult: (Throwable?) -> Unit
     )
 }

@@ -17,18 +17,13 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val accountService: AccountService,
     private val logService: LogService,
-    private val storageService: StorageService
 ) : MeditateGGViewModel(logService) {
     val showError = mutableStateOf(false)
 
     fun onAppStart(openAndPopUp: (String, String) -> Unit) {
         showError.value = false
 
-        if (accountService.hasUser()) {
-            if (storageService.isUserFirstTime(accountService.getUserId())) {
-                openAndPopUp(ONBOARDING_SCREEN, SPLASH_SCREEN)
-            } else { openAndPopUp(MAP_SCREEN, SPLASH_SCREEN) }
-        }
+        if (accountService.hasUser()) openAndPopUp(MAP_SCREEN, SPLASH_SCREEN)
         else createAnonymousAccount(openAndPopUp)
     }
 
@@ -39,7 +34,7 @@ class SplashViewModel @Inject constructor(
                     showError.value = true
                     logService.logNonFatalCrash(error)
                 }
-                else openAndPopUp(MAP_SCREEN, SPLASH_SCREEN)
+                else openAndPopUp(ONBOARDING_SCREEN, SPLASH_SCREEN)
             }
         }
     }

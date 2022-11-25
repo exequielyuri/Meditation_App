@@ -7,6 +7,7 @@ import com.example.meditategg.SIGN_UP_SCREEN
 import com.example.meditategg.SPLASH_SCREEN
 import com.example.meditategg.model.service.AccountService
 import com.example.meditategg.model.service.LogService
+import com.example.meditategg.model.service.StorageService
 import com.example.meditategg.screens.MeditateGGViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,13 +16,22 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     logService: LogService,
-    private val accountService: AccountService,
+    private val storageService: StorageService,
+    private val accountService: AccountService
 ) : MeditateGGViewModel(logService) {
     var uiState = mutableStateOf(SettingsUiState())
         private set
 
     fun initialize() {
         uiState.value = SettingsUiState(accountService.isAnonymousUser())
+        viewModelScope.launch(showErrorExceptionHandler) {
+            storageService.getUser(
+                accountService.getUserId(),
+                ::onError
+            ) {
+                if (it != null) uiState.value = uiState.value.copy(name = it.name)
+            }
+        }
     }
 
     fun onLoginClick(openScreen: (String) -> Unit) = openScreen(LOGIN_SCREEN)

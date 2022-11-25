@@ -19,6 +19,7 @@
 
     <!-- SignUpScreen -->
     <string name="create_account">Create account</string>
+    <string name="name_error">Name can\'t be blank.</string>
     <string name="password_error">Your password should have at least six characters and include one digit, one lower case letter and one upper case letter.</string>
     <string name="password_match_error">Passwords do not match.</string>
 

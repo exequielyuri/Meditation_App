@@ -3,15 +3,17 @@ package com.example.meditategg.screens.sign_up
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.meditategg.LOGIN_SCREEN
-import com.example.meditategg.SETTINGS_SCREEN
+import com.example.meditategg.MAP_SCREEN
 import com.example.meditategg.SIGN_UP_SCREEN
 import com.example.meditategg.R.string as AppText
 import com.example.meditategg.common.ext.isValidEmail
 import com.example.meditategg.common.ext.isValidPassword
 import com.example.meditategg.common.ext.passwordMatches
 import com.example.meditategg.common.snackbar.SnackbarManager
+import com.example.meditategg.model.User
 import com.example.meditategg.model.service.AccountService
 import com.example.meditategg.model.service.LogService
+import com.example.meditategg.model.service.StorageService
 import com.example.meditategg.screens.MeditateGGViewModel
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.perf.ktx.performance
@@ -21,12 +23,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
+    private val storageService: StorageService,
     private val accountService: AccountService,
     logService: LogService
 ) : MeditateGGViewModel(logService) {
     var uiState = mutableStateOf(SignUpUiState())
         private set
 
+    private val name get() = uiState.value.name
     private val email get() = uiState.value.email
     private val password get() = uiState.value.password
 
@@ -47,6 +51,10 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun onSignUpClick(openAndPopUp: (String, String) -> Unit) {
+        if (name == "") {
+            SnackbarManager.showMessage(AppText.name_error)
+        }
+
         if (!email.isValidEmail()) {
             SnackbarManager.showMessage(AppText.email_error)
             return
@@ -70,7 +78,16 @@ class SignUpViewModel @Inject constructor(
                 createAccountTrace.stop()
 
                 if (error == null) {
-                    openAndPopUp(SETTINGS_SCREEN, SIGN_UP_SCREEN)
+                    openAndPopUp(MAP_SCREEN, SIGN_UP_SCREEN)
+                } else onError(error)
+            }
+
+            storageService.addUser(
+                user = User(id = accountService.getUserId(), name = name)
+            ) { error ->
+                createAccountTrace.stop()
+                if (error == null) {
+                    openAndPopUp(MAP_SCREEN, SIGN_UP_SCREEN)
                 } else onError(error)
             }
         }
