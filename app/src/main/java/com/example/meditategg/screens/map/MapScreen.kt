@@ -66,6 +66,8 @@ fun MapScreen(
             MeditationNode(Meditation.WhatIsSelf.name, viewModel::onNodeClick, openScreen)
             MeditationNode(Meditation.FollowingBreath.name, viewModel::onNodeClick, openScreen)
             MeditationNode(Meditation.RewindPractice.name, viewModel::onNodeClick, openScreen)
+            MeditationNode(Meditation.OmChanting.name, viewModel::onNodeClick, openScreen)
+            MeditationNode(Meditation.FacultyOfHearing.name, viewModel::onNodeClick, openScreen)
         }
     }
 }

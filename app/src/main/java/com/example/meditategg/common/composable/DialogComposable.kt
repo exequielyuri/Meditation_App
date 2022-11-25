@@ -36,8 +36,10 @@ fun MeditationCompletionDialog(
         Column(
             modifier = modifier
                 .fillMaxWidth()
+                .height(200.dp)
                 .clip(RoundedCornerShape(4.dp))
-                .background(MaterialTheme.colors.background, RoundedCornerShape(4.dp))
+                .background(MaterialTheme.colors.background, RoundedCornerShape(4.dp)),
+            verticalArrangement = Arrangement.SpaceAround
         ) {
             Text(
                 text = if (durationSec>60 && durationSec/60>1) {
@@ -72,7 +74,7 @@ fun MeditationCompletionDialog(
                             fontFamily = Lora
                         )
                     },
-                    maxLines = 4
+                    maxLines = 3
                 )
             }
 
